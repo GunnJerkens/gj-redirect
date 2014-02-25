@@ -1,14 +1,14 @@
 <?php
 /**
  * @package GJ_Redirect
- * @version 0.1
+ * @version 0.2
  */
 
 /*
 Plugin Name: GJ Redirect
 Plugin URI: http://gunnjerkens.com
 Description: Adds a meta box to pages allowing you to 301 redirect pages to the home page.
-Version: 0.1
+Version: 0.2
 Author: Gunn|Jerkens
 Author URI: http://gunnjerkens.com
 */
@@ -37,13 +37,18 @@ function gj_metaboxes_add() {
 
 // Callback for the template
 function gj_metabox_callback($object) {
+
     wp_nonce_field( basename( __FILE__ ), 'gj_redirect_nonce' ); 
     $gj_redirect = get_post_meta( $object->ID, 'gj_redirect', true);
-    ?>
+    $gj_redirect_url = get_post_meta ( $object->ID, 'gj_redirect_url', true); ?>
+
     <p>
-      <label for="gj-redirect"><?php _e( "301 Redirect", 'GJ Redirect' ); ?></label>
-      <input type="checkbox" name="gj-redirect" id="gj-redirect" <?php if ($gj_redirect) { echo "checked='checked'"; } ?> />
+      <label for="gj-redirect"><?php _e( "301: ", 'GJ Redirect' ); ?></label>
+      <input type="checkbox" name="gj-redirect" id="gj-redirect" <?php if ($gj_redirect) { echo "checked='checked'"; } ?> /><br />
+      <label for="gj-redirect-url"><?php _e( "URL: ", 'GJ Redirect' ); ?></label>
+      <input type="text" name="gj-redirect-url" id="gj-redirect-url" value="<?php if ($gj_redirect_url) { echo $gj_redirect_url; } ?>"></input><br />
     </p><?php
+
 }
 
 // Save the meta box
@@ -60,35 +65,48 @@ function gj_metaboxes_save_post( $post_id, $post ) {
   if ( !current_user_can( $post_type->cap->edit_post, $post_id ) )
     return $post_id;
 
-  /* Get the posted data and sanitize it for use as an HTML class. */
-  $new_meta_value = ( isset( $_POST['gj-redirect'] ) ? 'true' : '' );
+  $gj_redirect = ( isset( $_POST['gj-redirect'] ) ? 'true' : '' );
+  $gj_redirect_url = ( isset($_POST['gj-redirect-url'] ) ? $_POST['gj-redirect-url'] : '' );
 
-  /* Get the meta key. */
-  $meta_key = 'gj_redirect';
+  $gj_redirect_array = array (
+    "gj_redirect" => $gj_redirect,
+    "gj_redirect_url" => $gj_redirect_url
+  );
 
-  /* Get the meta value of the custom field key. */
-  $meta_value = get_post_meta( $post_id, $meta_key, true );
+  foreach($gj_redirect_array as $meta_key=>$new_meta_value) {
 
-  /* If a new meta value was added and there was no previous value, add it. */
-  if ( $new_meta_value && '' == $meta_value )
-    add_post_meta( $post_id, $meta_key, $new_meta_value, true );
+    /* Get the meta value of the custom field key. */
+    $meta_value = get_post_meta( $post_id, $meta_key, true );
 
-  /* If the new meta value does not match the old value, update it. */
-  elseif ( $new_meta_value && $new_meta_value != $meta_value )
-    update_post_meta( $post_id, $meta_key, $new_meta_value );
+    /* If a new meta value was added and there was no previous value, add it. */
+    if ( $new_meta_value && '' == $meta_value )
+      add_post_meta( $post_id, $meta_key, $new_meta_value, true );
 
-  /* If there is no new meta value but an old value exists, delete it. */
-  elseif ( '' == $new_meta_value && $meta_value )
-    delete_post_meta( $post_id, $meta_key, $meta_value );
+    /* If the new meta value does not match the old value, update it. */
+    elseif ( $new_meta_value && $new_meta_value != $meta_value )
+      update_post_meta( $post_id, $meta_key, $new_meta_value );
+
+    /* If there is no new meta value but an old value exists, delete it. */
+    elseif ( '' == $new_meta_value && $meta_value )
+      delete_post_meta( $post_id, $meta_key, $meta_value );
+
+  }
+
 }
 
-// Complete the redirect --- TODO: Add custom URL options
+// Complete the redirect --- TODO: Add 301/302 select options
 function gj_metaboxes_action() {
   $post_id = get_the_ID();
   if ( !empty( $post_id ) ) {
+
     $postRedirect = get_post_meta( $post_id, 'gj_redirect', true );
-    if ($postRedirect === 'true') {
+    $postRedirectURL = get_post_meta( $post_id, 'gj_redirect_url', true );
+
+    if ($postRedirect === 'true' && empty($postRedirectURL)) {
       wp_redirect( home_url() ); 
+      exit;
+    } else if ($postRedirect === 'true' && !empty($postRedirectURL)) {
+      wp_redirect( $postRedirectURL );
       exit;
     }
   }
