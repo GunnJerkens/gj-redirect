@@ -8,3 +8,7 @@ Meta redirect option for WordPress. Shows up on all posts/pages and when checked
 -Add custom URL options  
 -Relation post/page search/dropdown  
 -Admin customization page  
+
+## License
+
+MIT
