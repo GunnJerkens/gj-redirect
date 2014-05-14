@@ -1,9 +1,4 @@
 <?php
-/**
- * @package GJ_Redirect
- * @version 0.2
- */
-
 /*
 Plugin Name: GJ Redirect
 Plugin URI: http://gunnjerkens.com
@@ -13,6 +8,10 @@ Author: Gunn|Jerkens
 Author URI: http://gunnjerkens.com
 */
 
+require_once(plugin_dir_path(__FILE__).'db/gj-redirect-db.php');
+
+
+// THIS IS THE OLD PLUGIN FOR REFACTOR //
 
 add_action( 'load-post.php', 'gj_metaboxes' );
 add_action( 'load-post-new.php', 'gj_metaboxes' );
