@@ -1,8 +1,6 @@
 <?php
 // TODO: Write documentation
 
-register_activation_hook(__FILE__, array('gjRedirectDatabase', 'initDB'));
-
 class gjRedirectDatabase {
 
   static function initDB() {
@@ -15,7 +13,7 @@ class gjRedirectDatabase {
     id mediumint(9) NOT NULL AUTO_INCREMENT,
        url VARCHAR(255) NOT NULL,
        redirect VARCHAR(255) NOT NULL,
-       type VARCHAR(255) NOT NULL,
+       status VARCHAR(255) NOT NULL,
        PRIMARY KEY (id)
     );";
 

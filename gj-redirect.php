@@ -3,13 +3,15 @@
 Plugin Name: GJ Redirect
 Plugin URI: http://gunnjerkens.com
 Description: Adds a meta box to pages allowing you to 301 redirect pages to the home page.
-Version: 0.2
+Version: 0.3
 Author: Gunn|Jerkens
 Author URI: http://gunnjerkens.com
 */
 
 require_once(plugin_dir_path(__FILE__).'gj-redirect-metaboxes.php');
 require_once(plugin_dir_path(__FILE__).'db/gj-redirect-db.php');
+
+register_activation_hook(__FILE__, array('gjRedirectDatabase', 'initDB'));
 
 class gjRedirect {
 
