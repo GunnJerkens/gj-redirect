@@ -20,7 +20,7 @@ class gjRedirect {
   }
 
   function gj_redirect_admin_actions() {
-    add_users_page("users.php", "GJ Redirect", 'administrator', "gj_redirect", "gj_redirect_admin_options");
+    add_options_page( 'GJ Redirect', 'GJ Redirect', 'administrator', 'gj_redirect', array(&$this,'gj_redirect_admin_options'));
   }
 
   function gj_redirect_admin_options() {
