@@ -9,7 +9,7 @@ if ('gj-redirect-options.php' == basename($_SERVER['SCRIPT_FILENAME'])) {
 
 
 
-$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'gj_redirect_mailgun';
+$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'gj_redirect_settings';
 
 ?>
 
@@ -30,7 +30,7 @@ $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'gj_redirect_mailgun';
     }
   }
 
-  if( $active_tab == 'gj_redirect_settings' ) {
+  if( $active_tab == 'gj_redirect_redirects' ) {
     if (file_exists(__DIR__. '/gj-redirect-redirects.php')) {
       include_once(__DIR__. '/gj-redirect-redirects.php');
     }
