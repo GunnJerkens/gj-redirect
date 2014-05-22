@@ -4,6 +4,7 @@ class gjRedirectInject {
 
   function __construct() {
     add_action('template_redirect', array(&$this, 'gj_redirect_inject'));
+    add_action('wp_head', array(&$this, 'doStruff'));
   }
 
   function gj_redirect_inject() {
