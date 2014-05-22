@@ -1,5 +1,4 @@
 <?php
-// TODO: Write documentation
 
 class gjRedirectDatabase {
 

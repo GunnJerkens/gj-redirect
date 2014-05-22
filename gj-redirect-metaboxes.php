@@ -1,7 +1,5 @@
 <?php
 
-// THIS IS THE OLD PLUGIN FOR REFACTOR //
-
 add_action( 'load-post.php', 'gj_metaboxes' );
 add_action( 'load-post-new.php', 'gj_metaboxes' );
 add_action( 'wp_head', 'gj_metaboxes_action');

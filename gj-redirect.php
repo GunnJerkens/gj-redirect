@@ -9,10 +9,10 @@ Author URI: http://gunnjerkens.com
 */
 
 require_once(plugin_dir_path(__FILE__).'gj-redirect-metaboxes.php');
-require_once(plugin_dir_path(__FILE__).'db/gj-redirect-db-init.php');
+require_once(plugin_dir_path(__FILE__).'gj-redirect-inject.php');
 require_once(plugin_dir_path(__FILE__).'db/gj-redirect-db-functions.php');
 
-register_activation_hook(__FILE__, array('gjRedirectDatabase', 'initDB'));
+register_activation_hook(plugin_dir_path(__FILE__).'db/gj-redirect-db-init.php', array('gjRedirectDatabase', 'initDB'));
 
 class gjRedirect {
 
