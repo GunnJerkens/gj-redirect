@@ -1,8 +1,37 @@
 <?php
 
-global $gjRedirectDB;
+// global $gjRedirectDB;
 
-$redirects = $gjRedirectDB->getRedirects(); ?>
+if(isset($_POST)) {
+
+  $postData = $_POST;
+  $deleteArray = [];
+
+  foreach($postData as $post) {
+
+    if($post[1] === 'on') {
+      $deleteItem = (int) $post[0];
+      $deleteArray[] = $deleteItem;
+    }
+
+  }
+
+  $deleteRedirects = new gjRedirectDB;
+  $deleteRedirects->setDeletes($deleteArray);
+  $result = $deleteRedirects->deleteRedirects();
+
+  if($result) {
+    echo '<div id="message" class="updated"><p>Items deleted successfully.</p></div>';
+  } else {
+    echo '<div id="message" class="error"><p>Items failed to delete.</p></div>';
+  }
+
+}
+
+
+
+$getRedirects = new gjRedirectDB;
+$redirects = $getRedirects->getRedirects(); ?>
 
 <form name="gj_redirects" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
   <input type="hidden" name="form_name" value="gj_redirects">
@@ -23,14 +52,15 @@ $redirects = $gjRedirectDB->getRedirects(); ?>
     foreach ($redirects as $redirect) { ?>
 
       <tr id="redirect-<?php echo $redirect->id; ?>" class="alternate">
+        <input type="hidden" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->id; ?>">
         <th>
-          <input type="checkbox" name="id[]" id="redirect_<?php echo $redirect->id; ?>">
+          <input type="checkbox" name="<?php echo $redirect->id; ?>[]" id="redirect_<?php echo $redirect->id; ?>">
         </th>
         <td><span><?php echo $redirect->id; ?></span></td>
-        <td><input id="upload_image" type="text" size="36" name="gj_login_logo" value="<?php echo $redirect->url; ?>" /></td>
-        <td><input id="upload_image" type="text" size="36" name="gj_login_logo" value="<?php echo $redirect->redirect; ?>" /></td>
+        <td><input id="upload_image" type="text" size="36" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->url; ?>" /></td>
+        <td><input id="upload_image" type="text" size="36" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->redirect; ?>" /></td>
         <td>
-          <select>
+          <select name="<?php echo $redirect->id; ?>[]">
             <option value="disabled" <?php echo $redirect->status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
             <option value="301" <?php echo $redirect->status === '301' ? 'selected' : ''; ?>>301</option>
             <option value="302" <?php echo $redirect->status === '302' ? 'selected' : ''; ?>>302</option>
@@ -42,7 +72,7 @@ $redirects = $gjRedirectDB->getRedirects(); ?>
     </tbody>
   </table>
   <br>
-  <input class="btn button" type="submit" name="Submit" value="Update Settings" />
+  <button class="btn button" type="submit">Update Settings</button>
 
 </form>
 
