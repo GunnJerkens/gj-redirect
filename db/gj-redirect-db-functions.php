@@ -28,11 +28,6 @@ class gjRedirectDB {
     $this->deletes = $id;
   }
 
-  function getValue() {
-    return $this->deletes;
-  }
-
-
   function deleteRedirects() {
 
     global $wpdb;
@@ -49,11 +44,11 @@ class gjRedirectDB {
           $this->deletes
         )
       );
-    } //  else {
-    //   $wpdb->query(
-    //     "TRUNCATE TABLE $table_name"
-    //    );
-    // }
+    } else {
+      $result = 'You must set deletes prior to calling this function.';
+    }
+
+    $this->deletes = false;
 
     if($result > 0) {
       $result = true;
@@ -63,6 +58,43 @@ class gjRedirectDB {
 
     return $result;
 
+  }
+
+  function deleteAllRedirects() {
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . $this->table;
+
+    $result = $wpdb->query(
+      "TRUNCATE TABLE $table_name"
+      );
+
+    return $result;
+
+  }
+
+  function createRedirects($createItems) {
+
+    global $wpdb;
+    $table_name = $wpdb->prefix . $this->table;
+
+    $keys = array('id','mode','url','redirect','status');
+
+    foreach ($createItems as $array) {
+      $addItems[] = array_combine($keys, $array);
+    }
+
+    foreach($addItems as $key=>$value) {
+
+      $result[] = $wpdb->insert( $table_name, array(
+        'url' => $value['url'],
+        'redirect' => $value['redirect'],
+        'status' =>$value['status']
+        ) );
+
+    }
+
+    return $result;
 
   }
 

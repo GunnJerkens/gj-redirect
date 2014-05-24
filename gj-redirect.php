@@ -18,6 +18,7 @@ class gjRedirect {
 
   function __construct() {
     add_action('admin_menu', array(&$this,'gj_redirect_admin_actions'));
+    add_action('admin_enqueue_scripts', array(&$this, 'gj_redirect_admin_js'));
   }
 
   function gj_redirect_admin_actions() {
@@ -27,6 +28,13 @@ class gjRedirect {
   function gj_redirect_admin_options() {
     include('admin/gj-redirect-options.php');
   }
+
+  function gj_redirect_admin_js() {
+    if(is_admin()) {
+      wp_enqueue_script('gj_redirect_admin_js', plugin_dir_url(__FILE) . '/gj-redirect/js/admin.js', false, '0.3');
+    }
+  }
+
 
 }
 new gjRedirect();

@@ -2,10 +2,12 @@
 
 // global $gjRedirectDB;
 
-if(isset($_POST)) {
+if(!empty($_POST)) {
 
   $postData = $_POST;
   $deleteArray = [];
+
+  // var_dump($postData);
 
   foreach($postData as $post) {
 
@@ -16,32 +18,79 @@ if(isset($_POST)) {
 
   }
 
-  $deleteRedirects = new gjRedirectDB;
-  $deleteRedirects->setDeletes($deleteArray);
-  $result = $deleteRedirects->deleteRedirects();
+  unset($post);
+
+  if(!empty($deleteArray)) {
+    $deleteRedirects = new gjRedirectDB;
+    $deleteRedirects->setDeletes($deleteArray);
+    $deleteResponse = $deleteRedirects->deleteRedirects();
+
+  }
+
+  foreach($postData as $post) {
+
+    if($post[1] === 'create' && isset($post[2])) {
+      // $createItem = (int) $post[0];
+      $createArray[] = $post;
+      // var_dump($post);
+
+    }
+  }
+
+  unset($post);
+
+  if(!empty($createArray)) {
+
+    $createRedirects = new gjRedirectDB;
+    $createResponse = $createRedirects->createRedirects($createArray);
+
+    foreach($createResponse as $response) {
+
+      if($response === 0) {
+        $createResponse = false;
+      }
+    }
+
+  }
+
+
+  // This is our error handling for the moment.
+  $result = true;
+
+  if(!$deleteResponse) {
+    $result = false;
+    echo 'delete';
+  } else if (!$createResponse) {
+    $result = false;
+    echo 'merp';
+  }
 
   if($result) {
     echo '<div id="message" class="updated"><p>Items deleted successfully.</p></div>';
   } else {
-    echo '<div id="message" class="error"><p>Items failed to delete.</p></div>';
+    echo '<div id="message" class="error"><p>Items failed to update.</p></div>';
   }
 
 }
 
 
-
 $getRedirects = new gjRedirectDB;
 $redirects = $getRedirects->getRedirects(); ?>
 
+<style>
+#button {
+  margin-top: 20px;
+}
+</style>
+
 <form name="gj_redirects" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
   <input type="hidden" name="form_name" value="gj_redirects">
-  <table class="wp-list-table widefat fixed">
+  <table class="wp-list-table widefat fixed gj-redirects">
     <thead class="">
       <tr>
-        <th scope="col" id="cb" class="column-cb">
+        <th scope="col" id="cb" class="column-cb check-column">
           <input id="cb-select-all-1" type="checkbox">
         </th>
-        <th><span>Redirect UID</span></th>
         <th><span>Page Location</span></th>
         <th><span>Redirect Location</span></th>
         <th><span>Redirect Type</span></th>
@@ -51,14 +100,13 @@ $redirects = $getRedirects->getRedirects(); ?>
 
     foreach ($redirects as $redirect) { ?>
 
-      <tr id="redirect-<?php echo $redirect->id; ?>" class="alternate">
+      <tr id="redirect-<?php echo $redirect->id; ?>" class="alternate" data-id="<?php echo $redirect->id; ?>">
         <input type="hidden" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->id; ?>">
-        <th>
+        <th class="check-column">
           <input type="checkbox" name="<?php echo $redirect->id; ?>[]" id="redirect_<?php echo $redirect->id; ?>">
         </th>
-        <td><span><?php echo $redirect->id; ?></span></td>
-        <td><input id="upload_image" type="text" size="36" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->url; ?>" /></td>
-        <td><input id="upload_image" type="text" size="36" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->redirect; ?>" /></td>
+        <td><input type="text" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->url; ?>" /></td>
+        <td><input type="text" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->redirect; ?>" /></td>
         <td>
           <select name="<?php echo $redirect->id; ?>[]">
             <option value="disabled" <?php echo $redirect->status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
@@ -71,9 +119,9 @@ $redirects = $getRedirects->getRedirects(); ?>
 
     </tbody>
   </table>
-  <br>
-  <button class="btn button" type="submit">Update Settings</button>
-
+  <div id="button" class="btn button addRow">Add Row</div>
+  <button id="button" class="btn button" type="submit">Update Settings</button>
 </form>
+
 
 
