@@ -10,12 +10,11 @@ class gjRedirectInject {
 
     $url = $_SERVER['REQUEST_URI'];
 
-    $createRedirects = new gjRedirectDB;
-    $createResponse = $createRedirects->matchRedirects($url);
+    $matchRedirects = new gjRedirectDB;
+    $matchResponse = $createRedirects->matchRedirects($url);
+    $matchResponse = $createResponse[0];
 
-
-
-    if(isset($createResponse->redirect) && isset($createResponse->status) && $createResponse->status !== 'disabled') {
+    if($createResponse != NULL && $createResponse->status !== 'disabled') {
 
       $httpVerify = stripos($createReponse->redirect, 'http://');
 
@@ -25,7 +24,7 @@ class gjRedirectInject {
 
       } else {
 
-        $redirect = $_SERVER['HTTP_HOST'].$createResponse->redirect;
+        $redirect = 'http://'.$_SERVER['HTTP_HOST'].$createResponse->redirect;
 
       }
 

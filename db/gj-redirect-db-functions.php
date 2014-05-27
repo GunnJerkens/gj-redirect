@@ -27,12 +27,13 @@ class gjRedirectDB {
     global $wpdb;
 
     $table_name = $wpdb->prefix . $this->table;
+    $where = "url = '$url'";
 
     $query = $wpdb->get_results(
       "
       SELECT *
       FROM $table_name
-      WHERE url = $url
+      WHERE $where
       ",
       $type
     );
