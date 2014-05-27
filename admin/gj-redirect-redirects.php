@@ -5,7 +5,6 @@ $get_gjRedirectDB = new gjRedirectDB;
 if(!empty($_POST)) {
 
   $postData = $_POST;
-  $deleteArray = [];
 
   foreach($postData as $post) {
 
@@ -104,7 +103,26 @@ if(!empty($_POST)) {
 
 }
 
-$redirects = $get_gjRedirectDB->getRedirects(); ?>
+// This is some sheisty pagination in PHP. I'm not proud.
+$rows = $get_gjRedirectDB->countRows();
+$showItems = 50;
+$totalItems = (array) $rows[0];
+$totalItems = $totalItems['COUNT(*)'];
+$pages = ceil($totalItems / $showItems);
+
+$url = parse_url($_SERVER['REQUEST_URI']);
+if(isset($url['query'])) {
+
+  parse_str($url['query'], $urlArray);
+  $currentPage = $urlArray['paged'];
+
+}
+
+$lowerLimit = ($currentPage * $showItems) - ($showItems);
+$upperLimit = $currentPage * $showItems;
+
+$redirects = $get_gjRedirectDB->getRedirects($lowerLimit, $upperLimit); ?>
+
 
 <style>
 #button {
@@ -152,6 +170,24 @@ $redirects = $get_gjRedirectDB->getRedirects(); ?>
   <div id="button" class="btn button addRow">Add Row</div>
   <button id="button" class="btn button" type="submit">Update Settings</button>
 </form>
+
+<div class="tablenav bottom">
+  <div class="tablenav-pages">
+    <span class="displaying-num"><?php echo $totalItems.' items'; ?></span>
+    <span class="pagination-links"><a class="first-page <?php echo $currentPage - 1 > 0 ? '' : 'disabled'; ?>" title="Go to the first page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=1">«</a>
+    <a class="prev-page <?php echo $currentPage - 1 > 0 ? '' : 'disabled'; ?>" title="Go to the previous page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=<?php echo $currentPage - 1 > 0 ? $currentPage - 1 : $currentPage; ?>">‹</a>
+    <span class="paging-input"><?php echo $currentPage; ?> of <span class="total-pages"><?php echo $pages; ?></span></span>
+    <a class="next-page <?php echo $currentPage + 1 > $pages ? 'disabled' : ''; ?>" title="Go to the next page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=<?php echo $currentPage +1; ?>">›</a>
+    <a class="last-page <?php echo $currentPage + 1 > $pages ? 'disabled' : ''; ?>" title="Go to the last page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=<?php echo $pages; ?>">»</a></span>
+  </div>
+</div>
+
+
+
+
+
+
+
 
 
 

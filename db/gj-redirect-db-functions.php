@@ -2,19 +2,49 @@
 
 class gjRedirectDB {
 
-  var $table = "gj_redirects";
-
-  function getRedirects($type='OBJECT', $where='1=1') {
+  function wpdb() {
 
     global $wpdb;
 
-    $table_name = $wpdb->prefix . $this->table;
+    return $wpdb;
+
+  }
+
+  function table() {
+
+    $wpdb = $this->wpdb();
+    $table = $wpdb->prefix.'gj_redirects';
+
+    return $table;
+
+  }
+
+  function countRows($type='OBJECT') {
+
+    $wpdb = $this->wpdb();
+    $table_name = $this->table();
+
+    $count = $wpdb->get_results(
+      "
+      SELECT COUNT(*) 
+      FROM $table_name
+      "
+    );
+
+    return $count;
+
+  }
+
+  function getRedirects($lowerLimit, $upperLimit, $where='1=1', $type='OBJECT') {
+
+    $wpdb = $this->wpdb();
+    $table_name = $this->table();
 
     $query = $wpdb->get_results(
       "
       SELECT *
       FROM $table_name
-      WHERE $where
+      LIMIT $lowerLimit, $upperLimit
       ",
       $type
     );
@@ -24,9 +54,8 @@ class gjRedirectDB {
 
   function matchRedirects($url, $type='OBJECT') {
 
-    global $wpdb;
-
-    $table_name = $wpdb->prefix . $this->table;
+    $wpdb = $this->wpdb();
+    $table_name = $this->table();
     $where = "url = '$url'";
 
     $query = $wpdb->get_results(
@@ -52,9 +81,8 @@ class gjRedirectDB {
 
   function deleteRedirects() {
 
-    global $wpdb;
-
-    $table_name = $wpdb->prefix . $this->table;
+    $wpdb = $this->wpdb();
+    $table_name = $this->table();
 
     if($this->deletes) {
 
@@ -87,9 +115,9 @@ class gjRedirectDB {
   }
 
   function deleteAllRedirects() {
-    global $wpdb;
 
-    $table_name = $wpdb->prefix . $this->table;
+    $wpdb = $this->wpdb();
+    $table_name = $this->table();
 
     $result = $wpdb->query(
       "TRUNCATE TABLE $table_name"
@@ -101,16 +129,19 @@ class gjRedirectDB {
 
   function createRedirects($createItems) {
 
-    global $wpdb;
-    $table_name = $wpdb->prefix . $this->table;
+    $wpdb = $this->wpdb();
+    $table_name = $this->table();
 
     foreach($createItems as $key=>$value) {
 
-      $result[] = $wpdb->insert( $table_name, array(
-        'url' => $value['url'],
-        'redirect' => $value['redirect'],
-        'status' =>$value['status']
-        ) );
+      $result[] = $wpdb->insert(
+        $table_name,
+        array(
+          'url' => $value['url'],
+          'redirect' => $value['redirect'],
+          'status' =>$value['status']
+        ) 
+      );
 
     }
 
@@ -120,8 +151,8 @@ class gjRedirectDB {
 
   function updateRedirects($updateItems) {
 
-    global $wpdb;
-    $table_name = $wpdb->prefix . $this->table;
+    $wpdb = $this->wpdb();
+    $table_name = $this->table();
 
     foreach($updateItems as $key=>$value) {
 

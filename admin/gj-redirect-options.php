@@ -13,7 +13,7 @@ $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'gj_redirect_settings';
 
 <h2 class="nav-tab-wrapper">
   <a href="?page=gj_redirect&tab=gj_redirect_settings" class="nav-tab <?php echo $active_tab == 'gj_redirect_settings' ? 'nav-tab-active' : ''; ?>">Settings</a>
-  <a href="?page=gj_redirect&tab=gj_redirect_redirects" class="nav-tab <?php echo $active_tab == 'gj_redirect_redirects' ? 'nav-tab-active' : ''; ?>">Redirects</a>
+  <a href="?page=gj_redirect&tab=gj_redirect_redirects&paged=1" class="nav-tab <?php echo $active_tab == 'gj_redirect_redirects' ? 'nav-tab-active' : ''; ?>">Redirects</a>
   <a href="?page=gj_redirect&tab=gj_redirect_help" class="nav-tab <?php echo $active_tab == 'gj_redirect_help' ? 'nav-tab-active' : ''; ?>">Help</a>
 </h2>
 
