@@ -72,20 +72,28 @@ if(!empty($_POST)) {
   if(!empty($updateArray)) {
 
     $updateRedirects = new gjRedirectDB;
-    $updateRedirects = $updateRedirects->updateRedirects($updateArray);
+    $updateResponse = $updateRedirects->updateRedirects($updateArray);
+
+    foreach ($updateResponse as $response) {
+
+      if($response === 0) {
+
+        $createResponse = false;
+
+      }
+
+    }
 
   }
 
   // This is our error handling for the moment. Sorry (shrug).
-  $result = true;
-
-  if(!$deleteResponse) {
+  if(!$deleteResponse || !$createResponse || !$updateResponse) {
 
     $result = false;
 
-  } else if (!$createResponse) {
+  } else {
 
-    $result = false;
+    $result = true;
 
   }
 
@@ -96,7 +104,6 @@ if(!empty($_POST)) {
   }
 
 }
-
 
 $getRedirects = new gjRedirectDB;
 $redirects = $getRedirects->getRedirects(); ?>
@@ -126,7 +133,7 @@ $redirects = $getRedirects->getRedirects(); ?>
 
       <tr id="redirect-<?php echo $redirect->id; ?>" class="alternate redirect" data-id="<?php echo $redirect->id; ?>">
         <input type="hidden" name="<?php echo $redirect->id; ?>[id]" value="<?php echo $redirect->id; ?>">
-        <input type="hidden" class="mode" name="mode" value="">
+        <input type="hidden" class="mode" name="<?php echo $redirect->id; ?>[mode]" value="">
         <th class="check-column">
           <input type="checkbox" name="<?php echo $redirect->id; ?>[delete]" id="redirect_<?php echo $redirect->id; ?>">
         </th>

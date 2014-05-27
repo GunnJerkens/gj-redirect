@@ -22,6 +22,25 @@ class gjRedirectDB {
     return $query;
   }
 
+  function matchRedirects($url, $type='OBJECT') {
+
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . $this->table;
+
+    $query = $wpdb->get_results(
+      "
+      SELECT *
+      FROM $table_name
+      WHERE url = $url
+      ",
+      $type
+    );
+
+    return $query;
+
+  }
+
   private $deletes;
 
   function setDeletes($id) {
@@ -84,12 +103,6 @@ class gjRedirectDB {
     global $wpdb;
     $table_name = $wpdb->prefix . $this->table;
 
-    // $keys = array('id','mode','url','redirect','status');
-
-    // foreach ($createItems as $array) {
-    //   $addItems[] = array_combine($keys, $array);
-    // }
-
     foreach($createItems as $key=>$value) {
 
       $result[] = $wpdb->insert( $table_name, array(
@@ -109,6 +122,21 @@ class gjRedirectDB {
     global $wpdb;
     $table_name = $wpdb->prefix . $this->table;
 
+    foreach($updateItems as $key=>$value) {
+
+      $result[] = $wpdb->update(
+        $table_name,
+        array(
+          'url'=>$value['url'],
+          'redirect'=>$value['redirect'],
+          'status'=>$value['status']
+        ),
+        array('id'=>$value['id'])
+      );
+
+    }
+
+    return $result;
 
   }
 
