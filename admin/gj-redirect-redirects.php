@@ -1,24 +1,22 @@
 <?php
 
-// global $gjRedirectDB;
-
 if(!empty($_POST)) {
 
   $postData = $_POST;
   $deleteArray = [];
 
-  // var_dump($postData);
-
   foreach($postData as $post) {
 
-    if($post[1] === 'on') {
-      $deleteItem = (int) $post[0];
+    if(isset($post['delete']) && $post['delete'] === 'on') {
+      $deleteItem = (int) $post['id'];
       $deleteArray[] = $deleteItem;
     }
 
   }
 
   unset($post);
+
+  $deleteResponse = true;
 
   if(!empty($deleteArray)) {
     $deleteRedirects = new gjRedirectDB;
@@ -29,15 +27,17 @@ if(!empty($_POST)) {
 
   foreach($postData as $post) {
 
-    if($post[1] === 'create' && isset($post[2])) {
-      // $createItem = (int) $post[0];
+    if(isset($post['mode']) && $post['mode'] === 'create' && isset($post['url'])) {
+
       $createArray[] = $post;
-      // var_dump($post);
 
     }
+
   }
 
   unset($post);
+
+  $createResponse = true;
 
   if(!empty($createArray)) {
 
@@ -47,26 +47,50 @@ if(!empty($_POST)) {
     foreach($createResponse as $response) {
 
       if($response === 0) {
+
         $createResponse = false;
+
       }
     }
 
   }
 
+  foreach($postData as $post) {
 
-  // This is our error handling for the moment.
+    if(isset($post['mode']) && $post['mode'] === 'update') {
+
+      $updateArray[] = $post;
+
+    }
+
+  }
+
+  unset($post);
+
+  $updateResponse = true;
+
+  if(!empty($updateArray)) {
+
+    $updateRedirects = new gjRedirectDB;
+    $updateRedirects = $updateRedirects->updateRedirects($updateArray);
+
+  }
+
+  // This is our error handling for the moment. Sorry (shrug).
   $result = true;
 
   if(!$deleteResponse) {
+
     $result = false;
-    echo 'delete';
+
   } else if (!$createResponse) {
+
     $result = false;
-    echo 'merp';
+
   }
 
   if($result) {
-    echo '<div id="message" class="updated"><p>Items deleted successfully.</p></div>';
+    echo '<div id="message" class="updated"><p>Items updated successfully.</p></div>';
   } else {
     echo '<div id="message" class="error"><p>Items failed to update.</p></div>';
   }
@@ -100,15 +124,16 @@ $redirects = $getRedirects->getRedirects(); ?>
 
     foreach ($redirects as $redirect) { ?>
 
-      <tr id="redirect-<?php echo $redirect->id; ?>" class="alternate" data-id="<?php echo $redirect->id; ?>">
-        <input type="hidden" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->id; ?>">
+      <tr id="redirect-<?php echo $redirect->id; ?>" class="alternate redirect" data-id="<?php echo $redirect->id; ?>">
+        <input type="hidden" name="<?php echo $redirect->id; ?>[id]" value="<?php echo $redirect->id; ?>">
+        <input type="hidden" class="mode" name="mode" value="">
         <th class="check-column">
-          <input type="checkbox" name="<?php echo $redirect->id; ?>[]" id="redirect_<?php echo $redirect->id; ?>">
+          <input type="checkbox" name="<?php echo $redirect->id; ?>[delete]" id="redirect_<?php echo $redirect->id; ?>">
         </th>
-        <td><input type="text" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->url; ?>" /></td>
-        <td><input type="text" name="<?php echo $redirect->id; ?>[]" value="<?php echo $redirect->redirect; ?>" /></td>
+        <td><input type="text" class="detect-change" name="<?php echo $redirect->id; ?>[url]" value="<?php echo $redirect->url; ?>" /></td>
+        <td><input type="text" class="detect-change" name="<?php echo $redirect->id; ?>[redirect]" value="<?php echo $redirect->redirect; ?>" /></td>
         <td>
-          <select name="<?php echo $redirect->id; ?>[]">
+          <select class="detect-change" name="<?php echo $redirect->id; ?>[status]">
             <option value="disabled" <?php echo $redirect->status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
             <option value="301" <?php echo $redirect->status === '301' ? 'selected' : ''; ?>>301</option>
             <option value="302" <?php echo $redirect->status === '302' ? 'selected' : ''; ?>>302</option>

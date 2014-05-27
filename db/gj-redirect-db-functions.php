@@ -25,7 +25,9 @@ class gjRedirectDB {
   private $deletes;
 
   function setDeletes($id) {
+
     $this->deletes = $id;
+
   }
 
   function deleteRedirects() {
@@ -34,27 +36,31 @@ class gjRedirectDB {
 
     $table_name = $wpdb->prefix . $this->table;
 
-    if ($this->deletes) {
-      $result = $wpdb->query(
-        $wpdb->prepare(
-          "
-          DELETE FROM $table_name 
-          WHERE id = %d
-          ",
-          $this->deletes
-        )
-      );
+    if($this->deletes) {
+
+      foreach($this->deletes as $id) {
+
+        $result = $wpdb->query(
+          $wpdb->prepare(
+            "
+            DELETE FROM $table_name 
+            WHERE id = %d
+            ",
+            $id
+          )
+        );
+
+      }
+
     } else {
+
       $result = 'You must set deletes prior to calling this function.';
+
     }
 
     $this->deletes = false;
 
-    if($result > 0) {
-      $result = true;
-    } else {
-      $result = false;
-    }
+    $result > 0 ? $result = true : $result = false;
 
     return $result;
 
@@ -78,13 +84,13 @@ class gjRedirectDB {
     global $wpdb;
     $table_name = $wpdb->prefix . $this->table;
 
-    $keys = array('id','mode','url','redirect','status');
+    // $keys = array('id','mode','url','redirect','status');
 
-    foreach ($createItems as $array) {
-      $addItems[] = array_combine($keys, $array);
-    }
+    // foreach ($createItems as $array) {
+    //   $addItems[] = array_combine($keys, $array);
+    // }
 
-    foreach($addItems as $key=>$value) {
+    foreach($createItems as $key=>$value) {
 
       $result[] = $wpdb->insert( $table_name, array(
         'url' => $value['url'],
@@ -95,6 +101,14 @@ class gjRedirectDB {
     }
 
     return $result;
+
+  }
+
+  function updateRedirects($updateItems) {
+
+    global $wpdb;
+    $table_name = $wpdb->prefix . $this->table;
+
 
   }
 

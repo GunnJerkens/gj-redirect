@@ -14,16 +14,16 @@ jQuery(document).ready(function($){
       ID = $('.gj-redirects > tbody:last').children('tr').last().data('id') + 1;
 
       tableRow = [
-        '<tr id="redirect-' + ID + '" class="alternate" data-id="' + ID + '">',
-          '<input type="hidden" name="' + ID + '[]" value="' + ID + '">',
-          '<input type="hidden" name="' + ID + '[]" value="create">',
+        '<tr id="redirect-' + ID + '" class="alternate redirect" data-id="' + ID + '">',
+          '<input type="hidden" name="' + ID + '[id]" value="' + ID + '">',
+          '<input type="hidden" name="' + ID + '[mode]" value="create">',
           '<th class="check-column">',
-            '<input type="checkbox" name="' + ID + '[]" id="redirect_' + ID + '">',
+            '<input type="checkbox" name="' + ID + '[delete]" id="redirect_' + ID + '">',
           '</th>',
-          '<td><input type="text" name="' + ID + '[]" value=""></td>',
-          '<td><input type="text" name="' + ID + '[]" value=""></td>',
+          '<td><input type="text" name="' + ID + '[url]" value=""></td>',
+          '<td><input type="text" name="' + ID + '[redirect]" value=""></td>',
           '<td>',
-            '<select name="' + ID + '[]">',
+            '<select name="' + ID + '[status]">',
               '<option value="disabled">Disabled</option>',
               '<option value="301">301</option>',
               '<option value="302">302</option>',
@@ -37,6 +37,11 @@ jQuery(document).ready(function($){
     });
   }
   createRow();
+
+  $('.detect-change').change(function() {
+    console.log('CHANGE!');
+    $(this).parents('tr').children('.mode').val('update');
+  });
 
 
 });
