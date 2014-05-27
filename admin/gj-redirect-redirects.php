@@ -1,5 +1,7 @@
 <?php
 
+$get_gjRedirectDB = new gjRedirectDB;
+
 if(!empty($_POST)) {
 
   $postData = $_POST;
@@ -19,9 +21,8 @@ if(!empty($_POST)) {
   $deleteResponse = true;
 
   if(!empty($deleteArray)) {
-    $deleteRedirects = new gjRedirectDB;
-    $deleteRedirects->setDeletes($deleteArray);
-    $deleteResponse = $deleteRedirects->deleteRedirects();
+    $get_gjRedirectDB->setDeletes($deleteArray);
+    $deleteResponse = $get_gjRedirectDB->deleteRedirects();
 
   }
 
@@ -41,8 +42,7 @@ if(!empty($_POST)) {
 
   if(!empty($createArray)) {
 
-    $createRedirects = new gjRedirectDB;
-    $createResponse = $createRedirects->createRedirects($createArray);
+    $createResponse = $get_gjRedirectDB->createRedirects($createArray);
 
     foreach($createResponse as $response) {
 
@@ -71,8 +71,7 @@ if(!empty($_POST)) {
 
   if(!empty($updateArray)) {
 
-    $updateRedirects = new gjRedirectDB;
-    $updateResponse = $updateRedirects->updateRedirects($updateArray);
+    $updateResponse = $get_gjRedirectDB->updateRedirects($updateArray);
 
     foreach ($updateResponse as $response) {
 
@@ -105,8 +104,7 @@ if(!empty($_POST)) {
 
 }
 
-$getRedirects = new gjRedirectDB;
-$redirects = $getRedirects->getRedirects(); ?>
+$redirects = $get_gjRedirectDB->getRedirects(); ?>
 
 <style>
 #button {

@@ -10,25 +10,25 @@ class gjRedirectInject {
 
     $url = $_SERVER['REQUEST_URI'];
 
-    $matchRedirects = new gjRedirectDB;
-    $matchResponse = $createRedirects->matchRedirects($url);
-    $matchResponse = $createResponse[0];
+    $get_gjRedirectDB = new gjRedirectDB;
+    $matchResponse = $get_gjRedirectDB->matchRedirects($url);
+    $matchResponse = $matchResponse[0];
 
-    if($createResponse != NULL && $createResponse->status !== 'disabled') {
+    if($matchResponse != NULL && $matchResponse->status !== 'disabled' && $matchResponse->redirect !== "") {
 
-      $httpVerify = stripos($createReponse->redirect, 'http://');
+      $httpVerify = stripos($matchResponse->redirect, 'http://');
 
       if($httpVerify !== false) {
 
-        $redirect = $createResponse->redirect;
+        $redirect = $matchResponse->redirect;
 
       } else {
 
-        $redirect = 'http://'.$_SERVER['HTTP_HOST'].$createResponse->redirect;
+        $redirect = 'http://'.$_SERVER['HTTP_HOST'].$matchResponse->redirect;
 
       }
 
-      wp_redirect( $redirect, $createResponse->status );
+      wp_redirect( $redirect, $matchResponse->status );
       exit;
 
     }
