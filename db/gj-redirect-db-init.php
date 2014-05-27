@@ -5,14 +5,15 @@ class gjRedirectDatabase {
   static function initDB() {
 
     global $wpdb;
-    $redirects = $wpdb->prefix . "gj_redirects";
+    $table_name = $wpdb->prefix . "gj_redirects";
 
     // Redirects Table
-    $redirects = "CREATE TABLE $redirects (
+    $redirects = "CREATE TABLE $table_name (
     id mediumint(9) NOT NULL AUTO_INCREMENT,
        url VARCHAR(255) NOT NULL,
        redirect VARCHAR(255) NOT NULL,
        status VARCHAR(255) NOT NULL,
+       options VARCHAR(255) NOT NULL,
        PRIMARY KEY (id)
     );";
 
