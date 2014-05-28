@@ -141,6 +141,7 @@ $redirects = $get_gjRedirectDB->getRedirects($lowerLimit, $upperLimit); ?>
         <th><span>Page Location</span></th>
         <th><span>Redirect Location</span></th>
         <th><span>Redirect Type</span></th>
+        <th><span>Redirect Scope</span></th>
       </tr>
     </thead>
     <tbody><?php
@@ -160,6 +161,14 @@ $redirects = $get_gjRedirectDB->getRedirects($lowerLimit, $upperLimit); ?>
             <option value="disabled" <?php echo $redirect->status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
             <option value="301" <?php echo $redirect->status === '301' ? 'selected' : ''; ?>>301</option>
             <option value="302" <?php echo $redirect->status === '302' ? 'selected' : ''; ?>>302</option>
+          </select>
+        </td>
+        <td>
+          <select class="detect-change" name="<?php echo $redirect->id; ?>[scope]">
+            <option value="exact" <?php echo $redirect->scope === 'exact' ? 'selected' : ''; ?>>Exact</option>
+            <option value="plusquery" <?php echo $redirect->scope === 'plusquery' ? 'selected' : ''; ?>>Exact + Query</option>
+            <option value="plusfragment" <?php echo $redirect->scope === 'plusfragment' ? 'selected' : ''; ?>>Exact + Fragment</option>
+            <option value="any" <?php echo $redirect->scope === 'any' ? 'selected' : ''; ?>>Any</option>
           </select>
         </td>
       </tr><?php

@@ -31,7 +31,7 @@ class gjRedirect {
 
   function gj_redirect_admin_js() {
     if(is_admin()) {
-      wp_enqueue_script('gj_redirect_admin_js', plugin_dir_url(__FILE__) . '/gj-redirect/js/admin.js', false, '0.3');
+      wp_enqueue_script('gj_redirect_admin_js', plugin_dir_url(__FILE__) . '/js/admin.js', false, '0.3');
     }
   }
 
@@ -48,7 +48,7 @@ class gjRedirect {
        url VARCHAR(255) NOT NULL,
        redirect VARCHAR(255) NOT NULL,
        status VARCHAR(255) NOT NULL,
-       options VARCHAR(255) NOT NULL,
+       scope VARCHAR(255) NOT NULL,
        PRIMARY KEY (id)
     );";
 

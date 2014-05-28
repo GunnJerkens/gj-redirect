@@ -139,7 +139,8 @@ class gjRedirectDB {
         array(
           'url' => $value['url'],
           'redirect' => $value['redirect'],
-          'status' =>$value['status']
+          'status' => $value['status'],
+          'scope' => $value['scope']
         ) 
       );
 
@@ -159,11 +160,12 @@ class gjRedirectDB {
       $result[] = $wpdb->update(
         $table_name,
         array(
-          'url'=>$value['url'],
-          'redirect'=>$value['redirect'],
-          'status'=>$value['status']
+          'url' => $value['url'],
+          'redirect' => $value['redirect'],
+          'status' => $value['status'],
+          'scope' => $value['scope']
         ),
-        array('id'=>$value['id'])
+        array('id' => $value['id'])
       );
 
     }

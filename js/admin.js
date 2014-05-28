@@ -29,6 +29,14 @@ jQuery(document).ready(function($){
               '<option value="302">302</option>',
             '</select>',
           '</td>',
+          '<td>',
+            '<select name="' + ID + '[scope]">',
+              '<option value="exact">Exact</option>',
+              '<option value="plusquery">Exact + Query</option>',
+              '<option value="plusfragment">Exact + Fragment</option>',
+              '<option value="any">Any</option>',
+            '</select>',
+          '</td>',
         '</tr>'
       ].join("\n");
 
