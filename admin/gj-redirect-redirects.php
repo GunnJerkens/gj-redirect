@@ -86,15 +86,3 @@ if($response['status'] === 'success') {
   </div>
 
 </form>
-
-
-
-
-
-
-
-
-
-
-
-
