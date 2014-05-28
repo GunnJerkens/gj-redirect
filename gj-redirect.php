@@ -12,7 +12,6 @@ require_once(plugin_dir_path(__FILE__).'gj-redirect-metaboxes.php');
 require_once(plugin_dir_path(__FILE__).'gj-redirect-inject.php');
 require_once(plugin_dir_path(__FILE__).'admin/gj-redirect-admin-functions.php');
 require_once(plugin_dir_path(__FILE__).'db/gj-redirect-db-functions.php');
-require_once(plugin_dir_path(__FILE__).'db/gj-redirect-upload.php');
 
 class gjRedirect {
 

@@ -70,7 +70,7 @@ if($response['status'] === 'success') {
   </table>
 
   <div class="gj-buttons">
-    <div class="btn button table-button">Add Row</div>
+    <div class="btn button table-button add-row">Add Row</div>
     <button class="btn button table-button" type="submit">Update Settings</button>
   </div>
 

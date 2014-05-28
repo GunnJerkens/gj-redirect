@@ -5,7 +5,7 @@ jQuery(document).ready(function($){
 
 
   redirectsTable = $('.gj-redirects > tbody:last');
-  addRow = $('.addRow');
+  addRow = $('.add-row');
 
 
   function createRow() {
