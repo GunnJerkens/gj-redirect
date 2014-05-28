@@ -21,16 +21,18 @@ WordPress requires absolute paths for wp_redirect. This may have some bugs to wo
 
 ### status
 
-`301` = Permanent Redirect
-`302` = Temporary Redirect
+`301` = Permanent Redirect  
+`302` = Temporary Redirect  
 
 ### scope
 
-Scope defines how we are matching the URL. Exact is the most similar to a standard `Redirect 301 /url-a/ /url-b/`.
+Scope defines how we are matching the URL. Exact is the most similar to a standard:  
 
-`exact` = Match url exactly, do not redirect if query is set.
-`plusquery` = Match url exactly, match query exactly.
-`any` = Match exactly, ignore query string.
+`Redirect 301 /url-a/ /url-b/`.
+
+`exact` = Match url exactly, do not redirect if query is set.  
+`plusquery` = Match url exactly, match query exactly.  
+`any` = Match exactly, ignore query string.  
 
 ## csv upload
 
