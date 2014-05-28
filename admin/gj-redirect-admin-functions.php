@@ -1,5 +1,138 @@
 <?php
 
+function gjRedirectModifyTable($postData) {
+
+  $get_gjRedirectDB = new gjRedirectDB;
+
+  foreach($postData as $post) {
+
+    if(isset($post['delete']) && $post['delete'] === 'on') {
+      $deleteItem = (int) $post['id'];
+      $deleteArray[] = $deleteItem;
+    }
+
+  }
+
+  unset($post);
+
+  $deleteResponse = true;
+
+  if(!empty($deleteArray)) {
+    $get_gjRedirectDB->setDeletes($deleteArray);
+    $deleteResponse = $get_gjRedirectDB->deleteRedirects();
+
+  }
+
+  foreach($postData as $post) {
+
+    if(isset($post['mode']) && $post['mode'] === 'create' && isset($post['url'])) {
+
+      $createArray[] = $post;
+
+    }
+
+  }
+
+  unset($post);
+
+  $createResponse = true;
+
+  if(!empty($createArray)) {
+
+    $createResponse = $get_gjRedirectDB->createRedirects($createArray);
+
+    foreach($createResponse as $response) {
+
+      if($response === 0) {
+
+        $createResponse = false;
+
+      }
+    }
+
+  }
+
+  foreach($postData as $post) {
+
+    if(isset($post['mode']) && $post['mode'] === 'update') {
+
+      $updateArray[] = $post;
+
+    }
+
+  }
+
+  unset($post);
+
+  $updateResponse = true;
+
+  if(!empty($updateArray)) {
+
+    $updateResponse = $get_gjRedirectDB->updateRedirects($updateArray);
+
+    foreach ($updateResponse as $response) {
+
+      if($response === 0) {
+
+        $createResponse = false;
+
+      }
+
+    }
+
+  }
+
+  // This is our error handling for the moment. Sorry (shrug).
+  if(!$deleteResponse || !$createResponse || !$updateResponse) {
+
+    $response = gjRedirectMessaging('error', 'Items failed to update.');
+
+  } else {
+
+    $response = gjRedirectMessaging('success', 'Items updated successfully.');
+
+  }
+
+  return $response;
+
+}
+
+function gjRedirectPaginateTable($showItems) {
+
+  $get_gjRedirectDB = new gjRedirectDB;
+
+  $rows = $get_gjRedirectDB->countRows();
+
+  $totalItems = (array) $rows[0];
+  $totalItems = $totalItems['COUNT(*)'];
+  $pages = ceil($totalItems / $showItems);
+
+  $currentPage = 1;
+
+  $url = parse_url($_SERVER['REQUEST_URI']);
+  parse_str($url['query'], $urlArray);
+
+  if(isset($urlArray['paged'])) {
+    $currentPage = $urlArray['paged'];
+  }
+
+  $lowerLimit = ($currentPage * $showItems) - ($showItems);
+  $upperLimit = $currentPage * $showItems;
+
+  $pagination = array(
+    'rows' => $rows,
+    'show_items' => $showItems,
+    'total_items' => $totalItems,
+    'pages' => $pages,
+    'current_page' => $currentPage,
+    'lower_limit' => $lowerLimit,
+    'upper_limit' => $upperLimit
+  );
+
+  return $pagination;
+
+}
+
 function gjRedirectBulkUpload($uploadedFile) {
 
   $get_gjRedirectDB = new gjRedirectDB;
