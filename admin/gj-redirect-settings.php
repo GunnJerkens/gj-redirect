@@ -10,16 +10,16 @@ if(isset($_FILES['gj_redirects_csv'])) {
 
 }
 
-if(isset($_POST['metabox_status'])) {
+if(isset($_POST['gj_redirect_metabox_status'])) {
 
-  $metabox_status = $_POST['metabox_status'];
-  update_option('metabox_status', $metabox_status); 
+  $metabox_status = $_POST['gj_redirect_metabox_status'];
+  update_option('gj_redirect_metabox_status', $metabox_status); 
 
   $response = gjRedirectMessaging('success', 'Options saved.');
 
 } else {
 
-  $metabox_status = get_option('metabox_status');
+  $metabox_status = get_option('gj_redirect_metabox_status');
 
 }
 
@@ -75,7 +75,7 @@ if($response['status'] === 'success') {
   <tr>
     <form name="gj_redirects_metabox" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
       <td>
-          <select name="metabox_status">
+          <select name="gj_redirect_metabox_status">
             <option value="enabled" <?php echo $metabox_status === 'disabled' ? 'selected' : ''; ?>>Enabled</option>
             <option value="disabled" <?php echo $metabox_status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
           </select>

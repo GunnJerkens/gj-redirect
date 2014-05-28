@@ -98,4 +98,9 @@ class gjRedirectMetabox {
   }
 
 }
-new gjRedirectMetabox();
+
+if(get_option('gj_redirect_metabox_status') === 'enabled') {
+
+  new gjRedirectMetabox();
+
+}
