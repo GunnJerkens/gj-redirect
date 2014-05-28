@@ -1,1 +1,1 @@
-<h1>Help</h1>
+<p>// TODO: Document how this thing works.</p>

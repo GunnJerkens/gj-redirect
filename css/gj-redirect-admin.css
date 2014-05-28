@@ -2,6 +2,16 @@
   width: 100%;
 }
 
-#button {
-  margin-top: 20px;
+.gj-redirects {
+  margin-bottom: 20px;
+}
+
+div.gj-buttons .table-button {
+  float: left;
+  margin-right: 20px !important;
+}
+
+div.tablenav {
+  float: right !important;
+  clear: none;
 }
