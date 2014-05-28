@@ -109,13 +109,13 @@ $showItems = 50;
 $totalItems = (array) $rows[0];
 $totalItems = $totalItems['COUNT(*)'];
 $pages = ceil($totalItems / $showItems);
+$currentPage = 1;
 
 $url = parse_url($_SERVER['REQUEST_URI']);
-if(isset($url['query'])) {
+parse_str($url['query'], $urlArray);
 
-  parse_str($url['query'], $urlArray);
+if(isset($urlArray['paged'])) {
   $currentPage = $urlArray['paged'];
-
 }
 
 $lowerLimit = ($currentPage * $showItems) - ($showItems);
@@ -176,7 +176,7 @@ $redirects = $get_gjRedirectDB->getRedirects($lowerLimit, $upperLimit); ?>
     <span class="displaying-num"><?php echo $totalItems.' items'; ?></span>
     <span class="pagination-links"><a class="first-page <?php echo $currentPage - 1 > 0 ? '' : 'disabled'; ?>" title="Go to the first page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=1">«</a>
     <a class="prev-page <?php echo $currentPage - 1 > 0 ? '' : 'disabled'; ?>" title="Go to the previous page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=<?php echo $currentPage - 1 > 0 ? $currentPage - 1 : $currentPage; ?>">‹</a>
-    <span class="paging-input"><?php echo $currentPage; ?> of <span class="total-pages"><?php echo $pages; ?></span></span>
+    <span class="paging-input"><?php echo $currentPage; ?> of <span class="total-pages"><?php echo $pages == 0 ? '1' : $pages; ?></span></span>
     <a class="next-page <?php echo $currentPage + 1 > $pages ? 'disabled' : ''; ?>" title="Go to the next page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=<?php echo $currentPage + 1 > $pages ? $currentPage : $currentPage + 1; ?>">›</a>
     <a class="last-page <?php echo $currentPage + 1 > $pages ? 'disabled' : ''; ?>" title="Go to the last page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=<?php echo $pages; ?>">»</a></span>
   </div>
