@@ -12,13 +12,14 @@ require_once(plugin_dir_path(__FILE__).'gj-redirect-metaboxes.php');
 require_once(plugin_dir_path(__FILE__).'gj-redirect-inject.php');
 require_once(plugin_dir_path(__FILE__).'db/gj-redirect-db-functions.php');
 
-register_activation_hook(plugin_dir_path(__FILE__).'db/gj-redirect-db-init.php', array('gjRedirectDatabase', 'initDB'));
 
 class gjRedirect {
 
   function __construct() {
     add_action('admin_menu', array(&$this,'gj_redirect_admin_actions'));
     add_action('admin_enqueue_scripts', array(&$this, 'gj_redirect_admin_js'));
+    register_activation_hook(__FILE__, array($this, 'create_table'));
+    register_deactvation_hook(__FILE__, array($this, 'delete_table'))
   }
 
   function gj_redirect_admin_actions() {
@@ -35,6 +36,38 @@ class gjRedirect {
     }
   }
 
+  static function create_table() {
+
+    add_option( "gj_redirect_db_version", "0.3" );
+
+    global $wpdb;
+    $table_name = $wpdb->prefix . "gj_redirects";
+
+    // Redirects Table
+    $redirects = "CREATE TABLE $table_name (
+    id mediumint(9) NOT NULL AUTO_INCREMENT,
+       url VARCHAR(255) NOT NULL,
+       redirect VARCHAR(255) NOT NULL,
+       status VARCHAR(255) NOT NULL,
+       options VARCHAR(255) NOT NULL,
+       PRIMARY KEY (id)
+    );";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+    dbDelta($redirects);
+
+    activate_plugin('gj-redirect.php');
+
+  }
+
+  static function delete_table() {
+
+    // TODO :: delete the tubbles
+
+    deactivate_plugin('gj-redirect.php');
+
+  }
 
 }
 new gjRedirect();
