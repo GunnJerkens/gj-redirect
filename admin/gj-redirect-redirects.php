@@ -56,7 +56,7 @@ if($response['status'] === 'success') {
           </select>
         </td>
         <td>
-          <select class="detect-change" name="<?php echo $redirect->id; ?>[scope]">
+          <select class="detect-change" name="<?php echo $redirect->id; ?>[scope]" disabled>
             <option value="exact" <?php echo $redirect->scope === 'exact' ? 'selected' : ''; ?>>Exact</option>
             <option value="plusquery" <?php echo $redirect->scope === 'plusquery' ? 'selected' : ''; ?>>Exact + Query</option>
             <option value="any" <?php echo $redirect->scope === 'any' ? 'selected' : ''; ?>>Any</option>

@@ -30,9 +30,11 @@ Scope defines how we are matching the URL. Exact is the most similar to a standa
 
 `Redirect 301 /url-a/ /url-b/`.
 
-`exact` = Match url exactly, do not redirect if query is set.  
+`exact` = Match url exactly.  
 `plusquery` = Match url exactly, match query exactly.  
 `any` = Match exactly, ignore query string.  
+
+*This is currently disabled. Only exact match is designed to work at the moment.*  
 
 ## csv upload
 

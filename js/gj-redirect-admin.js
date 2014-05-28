@@ -30,7 +30,7 @@ jQuery(document).ready(function($){
             '</select>',
           '</td>',
           '<td>',
-            '<select name="' + ID + '[scope]">',
+            '<select name="' + ID + '[scope]" disabled>',
               '<option value="exact">Exact</option>',
               '<option value="plusquery">Exact + Query</option>',
               '<option value="any">Any</option>',
