@@ -33,7 +33,6 @@ jQuery(document).ready(function($){
             '<select name="' + ID + '[scope]">',
               '<option value="exact">Exact</option>',
               '<option value="plusquery">Exact + Query</option>',
-              '<option value="plusfragment">Exact + Fragment</option>',
               '<option value="any">Any</option>',
             '</select>',
           '</td>',
