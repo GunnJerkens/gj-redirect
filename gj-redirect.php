@@ -19,7 +19,6 @@ class gjRedirect {
     add_action('admin_menu', array(&$this,'gj_redirect_admin_actions'));
     add_action('admin_enqueue_scripts', array(&$this, 'gj_redirect_admin_js'));
     register_activation_hook(__FILE__, array($this, 'create_table'));
-    register_deactvation_hook(__FILE__, array($this, 'delete_table'))
   }
 
   function gj_redirect_admin_actions() {
@@ -58,14 +57,6 @@ class gjRedirect {
     dbDelta($redirects);
 
     activate_plugin('gj-redirect.php');
-
-  }
-
-  static function delete_table() {
-
-    // TODO :: delete the tubbles
-
-    deactivate_plugin('gj-redirect.php');
 
   }
 
