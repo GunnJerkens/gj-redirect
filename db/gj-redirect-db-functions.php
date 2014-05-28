@@ -2,7 +2,7 @@
 
 class gjRedirectDB {
 
-  private $spdb;
+  private $wpdb;
 
   function __construct() {
     global $wpdb;

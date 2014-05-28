@@ -2,7 +2,7 @@
 /*
 Plugin Name: GJ Redirect
 Plugin URI: http://gunnjerkens.com
-Description: Adds a meta box to pages allowing you to 301 redirect pages to the home page.
+Description: Intercepts and redirects defined pages during WP routing instead of using htaccess or other method.
 Version: 0.3
 Author: Gunn|Jerkens
 Author URI: http://gunnjerkens.com
