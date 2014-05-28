@@ -193,8 +193,15 @@ function gjRedirectBulkUpload($uploadedFile) {
 
       }
     }
+    if(!$createResponse) {
 
-    $response = gjRedirectMessaging('success', 'Upload was successful.');
+      $response = gjRedirectMessaging('error', 'The database did not response favorably to this request.');
+
+    } else {
+
+      $response = gjRedirectMessaging('success', 'Upload was successful.');
+
+    }
 
   } else {
 
