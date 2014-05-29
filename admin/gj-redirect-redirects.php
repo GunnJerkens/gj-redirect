@@ -11,8 +11,6 @@ $pagination = gjRedirectPaginateTable(50);
 $get_gjRedirectDB = new gjRedirectDB;
 $redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $pagination['sql_length']);
 
-var_dump($pagination);
-
 if($response['status'] === 'success') {
 
   echo '<div id="message" class="updated"><p>'.$response['message'].'</p></div>';
