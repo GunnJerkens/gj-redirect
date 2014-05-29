@@ -1,7 +1,7 @@
 gj-redirect
 ===========
 
-This plugin was built to alleviate doing heavy redirects with .htacccess. It allows the end user to upload a CSV (formatted properly) into the table. If a user types in a non-existant page, before WordPress routing loads the 404 template it will check the database for the path. If the path is matched it will redirect accordingly to the defined location via a 301 or 302.
+This plugin was built to alleviate doing heavy redirects with .htaccess. It allows the end user to upload a CSV (formatted properly) into the table. If a user types in a non-existant page, before WordPress routing loads the 404 template it will check the database for the path. If the path is matched it will redirect accordingly to the defined location via a 301 or 302.
 
 ## paths
 
