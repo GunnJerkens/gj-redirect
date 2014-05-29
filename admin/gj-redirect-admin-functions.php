@@ -116,8 +116,7 @@ function gjRedirectPaginateTable($showItems) {
     $currentPage = $urlArray['paged'];
   }
 
-  $lowerLimit = ($currentPage * $showItems) - ($showItems);
-  $upperLimit = $currentPage * $showItems;
+  $sqlOffset = ($currentPage * $showItems) - ($showItems);
 
   $pagination = array(
     'rows' => $rows,
@@ -125,8 +124,8 @@ function gjRedirectPaginateTable($showItems) {
     'total_items' => $totalItems,
     'pages' => $pages,
     'current_page' => $currentPage,
-    'lower_limit' => $lowerLimit,
-    'upper_limit' => $upperLimit
+    'sql_offset' => $sqlOffset,
+    'sql_length' => $showItems
   );
 
   return $pagination;

@@ -32,7 +32,7 @@ class gjRedirectDB {
 
   }
 
-  function getRedirects($lowerLimit, $upperLimit, $where='1=1', $type='OBJECT') {
+  function getRedirects($offset, $length, $where='1=1', $type='OBJECT') {
 
     $table_name = $this->table();
 
@@ -40,7 +40,8 @@ class gjRedirectDB {
       "
       SELECT *
       FROM $table_name
-      LIMIT $lowerLimit, $upperLimit
+      WHERE $where
+      LIMIT $offset, $length
       ",
       $type
     );
