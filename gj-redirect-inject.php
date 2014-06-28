@@ -12,7 +12,7 @@ class gjRedirectInject {
 
     $get_gjRedirectDB = new gjRedirectDB;
     $matchResponse = $get_gjRedirectDB->matchRedirects($url);
-    $matchResponse = $matchResponse[0];
+    $matchResponse = isset($matchResponse[0]) ? $matchResponse[0] : null;
 
     if($matchResponse != NULL && $matchResponse->status !== 'disabled' && $matchResponse->redirect !== "") {
 
