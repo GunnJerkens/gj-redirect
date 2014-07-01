@@ -10,6 +10,19 @@ if(isset($_FILES['gj_redirects_csv'])) {
 
 }
 
+if(isset($_POST['gj_redirect_capture_status'])) {
+
+  $capture_status = $_POST['gj_redirect_capture_status'];
+  update_option('gj_redirect_capture_status', $capture_status);
+
+  $response = gjRedirectMessaging('success', 'Options saved.');
+
+} else {
+
+  $capture_status = get_option('gj_redirect_capture_status');
+
+}
+
 if(isset($_POST['gj_redirect_metabox_status'])) {
 
   $metabox_status = $_POST['gj_redirect_metabox_status'];
@@ -61,6 +74,20 @@ if($response['status'] === 'success') {
 
 <table class="gj-redirects-settings">
   <tr>
+    <td><h3>Capture 404s</h3></td>
+  </tr>
+  <tr>
+    <form name="gj_redirects_capture" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+      <td>
+        <select name="gj_redirect_capture_status">
+          <option value="enabled" <?php echo $capture_status === 'disabled' ? 'selected' : ''; ?>>Enabled</option>
+          <option value="disabled" <?php echo $capture_status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
+        </select>
+      </td>
+      <td><button class="btn button" type="submit">Update Settings</button></td>
+    </form>
+  </tr>
+  <tr>
     <td><h3>Bulk Upload</h3><td>
   </tr>
   <tr>
@@ -75,10 +102,10 @@ if($response['status'] === 'success') {
   <tr>
     <form name="gj_redirects_metabox" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
       <td>
-          <select name="gj_redirect_metabox_status">
-            <option value="enabled" <?php echo $metabox_status === 'disabled' ? 'selected' : ''; ?>>Enabled</option>
-            <option value="disabled" <?php echo $metabox_status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
-          </select>
+        <select name="gj_redirect_metabox_status">
+          <option value="enabled" <?php echo $metabox_status === 'disabled' ? 'selected' : ''; ?>>Enabled</option>
+          <option value="disabled" <?php echo $metabox_status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
+        </select>
       </td>
       <td><button class="btn button" type="submit">Update Settings</button></td>
     </form>

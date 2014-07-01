@@ -31,6 +31,21 @@ class gjRedirectInject {
       wp_redirect( $redirect, $matchResponse->status );
       exit;
 
+    } elseif($matchResponse == NULL) {
+
+      if(get_option('gj_redirect_capture_status') === 'enabled') {
+
+        $redirect[] = array(
+          'url' => $url,
+          'redirect' => '',
+          'status' => '301',
+          'scope' => 'exact'
+        );
+
+        $get_gjRedirectDB->createRedirects($redirect);
+
+      }
+
     }
 
   }
