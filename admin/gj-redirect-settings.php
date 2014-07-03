@@ -10,16 +10,26 @@ if(isset($_FILES['gj_redirects_csv'])) {
 
 }
 
-if(isset($_POST['gj_redirect_capture_status'])) {
+var_dump($_POST);
+
+if(isset($_POST['gj_redirects_capture'])) {
+
+  $capture_urls = $_POST['gj_redirect_capture_urls'];
+  update_option('gj_redirect_capture_urls', $capture_urls);
 
   $capture_status = $_POST['gj_redirect_capture_status'];
   update_option('gj_redirect_capture_status', $capture_status);
+
+  $capture_redirect = $_POST['gj_redirect_capture_redirect'];
+  update_option('gj_redirect_capture_redirect', $capture_redirect);
 
   $response = gjRedirectMessaging('success', 'Options saved.');
 
 } else {
 
+  $capture_urls = get_option('gj_redirect_capture_urls');
   $capture_status = get_option('gj_redirect_capture_status');
+  $capture_redirect = get_option('gj_redirect_capture_redirect');
 
 }
 
@@ -76,17 +86,43 @@ if($response['status'] === 'success') {
   <tr>
     <td><h3>Capture 404s</h3></td>
   </tr>
-  <tr>
-    <form name="gj_redirects_capture" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+  <form name="gj_redirects_capture" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+    <tr>
       <td>
-        <select name="gj_redirect_capture_status">
-          <option value="enabled" <?php echo $capture_status === 'disabled' ? 'selected' : ''; ?>>Enabled</option>
-          <option value="disabled" <?php echo $capture_status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
+        <p>Capture urls when a 404 is triggered: </p>
+      </td>
+      <td>
+        <select name="gj_redirect_capture_urls">
+          <option value="enabled" <?php echo $capture_urls === 'disabled' ? 'selected' : ''; ?>>Enabled</option>
+          <option value="disabled" <?php echo $capture_urls === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
         </select>
       </td>
+    </tr>
+    <tr>
+      <td>
+        <p>Default status of redirect: </p>
+      </td>
+      <td>
+        <select name="gj_redirect_capture_status">
+          <option value="disabled" <?php echo $capture_status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
+          <option value="301" <?php echo $capture_status === '301' ? 'selected' : ''; ?>>301</option>
+          <option value="302" <?php echo $capture_status === '302' ? 'selected' : ''; ?>>302</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p>Default redirect point: </p>
+      </td>
+      <td>
+        <input name="gj_redirect_capture_redirect" value="<?php echo $capture_redirect != "" ? $capture_redirect : '/'; ?>">
+      </td>
+    </tr>
+    <tr>
+      <td></td>
       <td><button class="btn button" type="submit">Update Settings</button></td>
-    </form>
-  </tr>
+    </tr>
+  </form>
   <tr>
     <td><h3>Bulk Upload</h3><td>
   </tr>
