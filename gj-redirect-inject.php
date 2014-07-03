@@ -40,7 +40,7 @@ class gjRedirectInject {
           $redirect[] = array(
             'url' => $url,
             'redirect' => '',
-            'status' => '301',
+            'status' => 'disabled',
             'scope' => 'exact'
           );
 
