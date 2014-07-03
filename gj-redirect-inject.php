@@ -8,41 +8,45 @@ class gjRedirectInject {
 
   function gj_redirect_inject() {
 
-    $url = $_SERVER['REQUEST_URI'];
+    if(is_404()) {
 
-    $get_gjRedirectDB = new gjRedirectDB;
-    $matchResponse = $get_gjRedirectDB->matchRedirects($url);
-    $matchResponse = isset($matchResponse[0]) ? $matchResponse[0] : null;
+      $url = $_SERVER['REQUEST_URI'];
 
-    if($matchResponse != NULL && $matchResponse->status !== 'disabled' && $matchResponse->redirect !== "") {
+      $get_gjRedirectDB = new gjRedirectDB;
+      $matchResponse = $get_gjRedirectDB->matchRedirects($url);
+      $matchResponse = isset($matchResponse[0]) ? $matchResponse[0] : null;
 
-      $httpVerify = stripos($matchResponse->redirect, 'http://');
+      if($matchResponse != NULL && $matchResponse->status !== 'disabled' && $matchResponse->redirect !== "") {
 
-      if($httpVerify !== false) {
+        $httpVerify = stripos($matchResponse->redirect, 'http://');
 
-        $redirect = $matchResponse->redirect;
+        if($httpVerify !== false) {
 
-      } else {
+          $redirect = $matchResponse->redirect;
 
-        $redirect = 'http://'.$_SERVER['HTTP_HOST'].$matchResponse->redirect;
+        } else {
 
-      }
+          $redirect = 'http://'.$_SERVER['HTTP_HOST'].$matchResponse->redirect;
 
-      wp_redirect( $redirect, $matchResponse->status );
-      exit;
+        }
 
-    } elseif($matchResponse == NULL) {
+        wp_redirect( $redirect, $matchResponse->status );
+        exit;
 
-      if(get_option('gj_redirect_capture_status') === 'enabled') {
+      } elseif($matchResponse == NULL) {
 
-        $redirect[] = array(
-          'url' => $url,
-          'redirect' => '',
-          'status' => '301',
-          'scope' => 'exact'
-        );
+        if(get_option('gj_redirect_capture_status') === 'enabled') {
 
-        $get_gjRedirectDB->createRedirects($redirect);
+          $redirect[] = array(
+            'url' => $url,
+            'redirect' => '',
+            'status' => '301',
+            'scope' => 'exact'
+          );
+
+          $get_gjRedirectDB->createRedirects($redirect);
+
+        }
 
       }
 
