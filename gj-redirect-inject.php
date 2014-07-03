@@ -2,8 +2,30 @@
 
 class gjRedirectInject {
 
+  private $capture;
+
   function __construct() {
+
+    $this->capture = $this->setCapture();
+
     add_action('template_redirect', array(&$this, 'gj_redirect_inject'));
+
+  }
+
+  function setCapture() {
+
+    if(get_option('gj_redirect_capture_urls') === 'enabled') {
+
+      $capture = true;
+
+    } else {
+
+      $capture = false;
+
+    }
+
+    return $capture;
+
   }
 
   function gj_redirect_inject() {
@@ -33,24 +55,35 @@ class gjRedirectInject {
         wp_redirect( $redirect, $matchResponse->status );
         exit;
 
-      } elseif($matchResponse == NULL) {
+      } elseif($matchResponse == NULL && $this->capture) {
 
-        if(get_option('gj_redirect_capture_status') === 'enabled') {
+          $redirects[] = $this->logRedirect($url);
 
-          $redirect[] = array(
-            'url' => $url,
-            'redirect' => '',
-            'status' => 'disabled',
-            'scope' => 'exact'
-          );
-
-          $get_gjRedirectDB->createRedirects($redirect);
-
-        }
+          $get_gjRedirectDB->createRedirects($redirects);
 
       }
 
     }
+
+  }
+
+  function logRedirect($url) {
+
+    $capture_redirect = get_option('gj_redirect_capture_redirect');
+    $capture_status = get_option('gj_redirect_capture_status');
+
+    $redirect_url = $capture_redirect ? $capture_redirect : '';
+    $redirect_status = $capture_status ? $capture_status : 'disabled';
+
+    $redirect = array(
+      'url' => $url,
+      'redirect' => $redirect_url,
+      'status' => $redirect_status,
+      'scope' => 'exact'
+    );
+
+
+    return $redirect;
 
   }
 

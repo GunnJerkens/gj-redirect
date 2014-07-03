@@ -10,8 +10,6 @@ if(isset($_FILES['gj_redirects_csv'])) {
 
 }
 
-var_dump($_POST);
-
 if(isset($_POST['gj_redirects_capture'])) {
 
   $capture_urls = $_POST['gj_redirect_capture_urls'];
@@ -87,6 +85,7 @@ if($response['status'] === 'success') {
     <td><h3>Capture 404s</h3></td>
   </tr>
   <form name="gj_redirects_capture" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+    <input type="hidden" name="gj_redirects_capture" value=true>
     <tr>
       <td>
         <p>Capture urls when a 404 is triggered: </p>
