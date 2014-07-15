@@ -132,6 +132,12 @@ function gjRedirectPaginateTable($showItems) {
 
 }
 
+function gjRedirectSortTable($options) {
+
+
+
+}
+
 function gjRedirectBulkUpload($uploadedFile) {
 
   $get_gjRedirectDB = new gjRedirectDB;

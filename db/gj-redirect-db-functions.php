@@ -32,15 +32,18 @@ class gjRedirectDB {
 
   }
 
-  function getRedirects($offset, $length, $where='1=1', $type='OBJECT') {
+  function getRedirects($offset, $length, $orderby = array( 'column' => 'id', 'sorted' => 'DESC'), $where='1=1', $type='OBJECT') {
 
     $table_name = $this->table();
+
+    $order = '`gj_gj_redirects`.`'.$orderby['column'].'` '.$orderby['sorted'];
 
     $query = $this->wpdb->get_results(
       "
       SELECT *
       FROM $table_name
       WHERE $where
+      ORDER BY $order
       LIMIT $offset, $length
       ",
       $type

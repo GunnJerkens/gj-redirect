@@ -7,7 +7,17 @@ if(!empty($_POST)) {
 
 }
 
-$pagination = gjRedirectPaginateTable(50);
+$query = array(
+  'items' => (isset($_GET['count']) ? (int) $_GET['count'] : 50),
+  'sort_column' => null,
+  'sort_direction' => null
+);
+
+var_dump($query);
+
+$sort = gjRedirectSortTable($query);
+
+$pagination = gjRedirectPaginateTable($query['items']);
 $get_gjRedirectDB = new gjRedirectDB;
 $redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $pagination['sql_length']);
 
@@ -30,10 +40,18 @@ if($response['status'] === 'success') {
         <th scope="col" id="cb" class="column-cb check-column">
           <input id="cb-select-all-1" type="checkbox">
         </th>
-        <th><span>Page Location</span></th>
-        <th><span>Redirect Location</span></th>
-        <th><span>Redirect Type</span></th>
-        <th><span>Redirect Scope</span></th>
+        <th scope="col" id="url" class="manage-column column-url sorted asc">
+          <a href="#"><span>Page Location</span><span class="sorting-indicator"></span></a>
+        </th>
+        <th scope="col" id="redirect" class="manage-column column-redirect sortable desc">
+          <a href="#"><span>Redirect Location</span><span class="sorting-indicator"></span></a>
+        </th>
+        <th scope="col" id="status" class="manage-column column-status sortable desc">
+          <a href="#"><span>Redirect Type</span><span class="sorting-indicator"></span></a>
+        </th>
+        <th scope="col" id="scope" class="manage-column column-scope sortable desc">
+          <a href="#"><span>Redirect Scope</span><span class="sorting-indicator"></span></a>
+        </th>
       </tr>
     </thead>
     <tbody><?php
@@ -71,6 +89,10 @@ if($response['status'] === 'success') {
   <div class="gj-buttons">
     <div class="btn button table-button add-row">Add Row</div>
     <button class="btn button table-button" type="submit">Update Settings</button>
+  </div>
+
+  <div class="gj-item count">
+    
   </div>
 
   <div class="tablenav bottom">
