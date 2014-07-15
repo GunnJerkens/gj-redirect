@@ -16,19 +16,23 @@ if(!empty($_POST)) {
 
 }
 
+var_dump($_GET);
+
 $redirects_count = get_option('gj_redirect_count_number') != null ? get_option('gj_redirect_count_number') : 50;
 $query = array(
   'items' => (isset($_GET['count']) ? (int) $_GET['count'] : $redirects_count),
-  'sort_column' => null,
-  'sort_direction' => null
+  'sort_column' => (isset($_GET['sort_column']) ? $_GET['sort_column'] : 'id'),
+  'sort_direction' => (isset($_GET['sort_direction']) ? $_GET['sort_direction'] : 'ASC')
 );
+
+var_dump($query);
 
 $sort = gjRedirectSortTable($query);
 $pagination = gjRedirectPaginateTable($query['items']);
 $url = gjRedirectsBuildURL($query);
 
 $get_gjRedirectDB = new gjRedirectDB;
-$redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $pagination['sql_length']);
+$redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $pagination['sql_length'], array('column' => $query['sort_column'], 'sorted' => $query['sort_direction']));
 
 if($response['status'] === 'success') {
 
