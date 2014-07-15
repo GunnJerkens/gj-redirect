@@ -36,11 +36,7 @@ class gjRedirectDB {
 
     $table_name = $this->table();
 
-    var_dump($orderby);
-
     $order = '`gj_gj_redirects`.`'.$orderby['column'].'` '.$orderby['sorted'];
-
-    var_dump($order);
 
     $query = $this->wpdb->get_results(
       "

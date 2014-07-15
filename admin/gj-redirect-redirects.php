@@ -16,8 +16,6 @@ if(!empty($_POST)) {
 
 }
 
-var_dump($_GET);
-
 $redirects_count = get_option('gj_redirect_count_number') != null ? get_option('gj_redirect_count_number') : 50;
 $query = array(
   'items' => (isset($_GET['count']) ? (int) $_GET['count'] : $redirects_count),
@@ -25,15 +23,16 @@ $query = array(
   'sort_direction' => (isset($_GET['sort_direction']) ? $_GET['sort_direction'] : 'ASC')
 );
 
-var_dump($query);
-
 $sort = gjRedirectSortTable($query);
 $pagination = gjRedirectPaginateTable($query['items']);
 $url = gjRedirectsBuildURL($query);
+$count_replace = '&count='.$query['items'];
+$count_url = str_replace($count_replace, '', $url);
 
 $get_gjRedirectDB = new gjRedirectDB;
 $redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $pagination['sql_length'], array('column' => $query['sort_column'], 'sorted' => $query['sort_direction']));
 
+// This is our error handling
 if($response['status'] === 'success') {
 
   echo '<div id="message" class="updated"><p>'.$response['message'].'</p></div>';
@@ -45,14 +44,14 @@ if($response['status'] === 'success') {
 } ?>
 
 <div class="gj-item count">
-  <form name="gj_redirects_count" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+  <form name="gj_redirects_count" method="post" action="<?php echo $count_url; ?>">
     <input type="hidden" name="form_name" value="gj_redirects_count">
     <select name="gj_redirect_count_number">
-      <option value="25" <?php echo $redirects_count === '25' ? 'selected' : ''; ?>>25</option>
-      <option value="50" <?php echo $redirects_count === '50' ? 'selected' : ''; ?>>50</option>
-      <option value="100" <?php echo $redirects_count === '100' ? 'selected' : ''; ?>>100</option>
-      <option value="250" <?php echo $redirects_count === '250' ? 'selected' : ''; ?>>250</option>
-      <option value="500" <?php echo $redirects_count === '500' ? 'selected' : ''; ?>>500</option>
+      <option value="25" <?php echo $redirects_count == '25' ? 'selected' : ''; ?>>25</option>
+      <option value="50" <?php echo $redirects_count == '50' ? 'selected' : ''; ?>>50</option>
+      <option value="100" <?php echo $redirects_count == '100' ? 'selected' : ''; ?>>100</option>
+      <option value="250" <?php echo $redirects_count == '250' ? 'selected' : ''; ?>>250</option>
+      <option value="500" <?php echo $redirects_count == '500' ? 'selected' : ''; ?>>500</option>
     </select>
     <button class="btn button" type="submit">Apply</button>
   </form>
@@ -66,17 +65,17 @@ if($response['status'] === 'success') {
         <th scope="col" id="cb" class="column-cb check-column">
           <input id="cb-select-all-1" type="checkbox">
         </th>
-        <th scope="col" id="url" class="manage-column column-url sorted asc">
-          <a href="#"><span>Page Location</span><span class="sorting-indicator"></span></a>
+        <th scope="col" id="url" class="manage-column column-url <?php echo $sort['url']; ?>">
+          <a href="<?php echo gjRedirectSortURL($query, 'url'); ?>"><span>Page Location</span><span class="sorting-indicator"></span></a>
         </th>
-        <th scope="col" id="redirect" class="manage-column column-redirect sortable desc">
-          <a href="#"><span>Redirect Location</span><span class="sorting-indicator"></span></a>
+        <th scope="col" id="redirect" class="manage-column column-redirect <?php echo $sort['redirect']; ?>">
+          <a href="<?php echo gjRedirectSortURL($query, 'redirect'); ?>"><span>Redirect Location</span><span class="sorting-indicator"></span></a>
         </th>
-        <th scope="col" id="status" class="manage-column column-status sortable desc">
-          <a href="#"><span>Redirect Type</span><span class="sorting-indicator"></span></a>
+        <th scope="col" id="status" class="manage-column column-status <?php echo $sort['status']; ?>">
+          <a href="<?php echo gjRedirectSortURL($query, 'status'); ?>"><span>Redirect Type</span><span class="sorting-indicator"></span></a>
         </th>
-        <th scope="col" id="scope" class="manage-column column-scope sortable desc">
-          <a href="#"><span>Redirect Scope</span><span class="sorting-indicator"></span></a>
+        <th scope="col" id="scope" class="manage-column column-scope <?php echo $sort['scope']; ?>">
+          <a href="<?php echo gjRedirectSortURL($query, 'scope'); ?>"><span>Redirect Scope</span><span class="sorting-indicator"></span></a>
         </th>
       </tr>
     </thead>

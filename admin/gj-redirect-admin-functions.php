@@ -134,7 +134,55 @@ function gjRedirectPaginateTable($showItems) {
 
 function gjRedirectSortTable($query) {
 
+  $sort = array(
+    'url' => 'sortable desc',
+    'redirect' => 'sortable desc',
+    'status' => 'sortable desc',
+    'scope' => 'sortable desc'
+  );
 
+  $direction = strtolower($query['sort_direction']);
+
+  if($query['sort_column'] === 'url') {
+
+    $sort['url'] = 'sorted '.$direction;
+
+  } elseif($query['sort_column'] === 'redirect') {
+
+    $sort['redirect'] = 'sorted '.$direction;
+
+  } elseif($query['sort_column'] === 'status') {
+
+    $sort['status'] = 'sorted '.$direction;
+
+  } elseif($query['sort_column'] === 'scope') {
+
+    $sort['scope'] = 'sorted '.$direction;
+
+  }
+
+  return $sort;
+
+}
+
+function gjRedirectSortURL($query, $column) {
+
+  $base = '?page=gj_redirect&tab=gj_redirect_redirects';
+
+  $base .= '&count='.$query['items'];
+  $base .= '&sort_column='.$column;
+
+  if($query['sort_column'] === $column && $query['sort_direction'] !== 'DESC') {
+
+    $base .= '&sort_direction=DESC';
+
+  } else {
+
+    $base .= '&sort_direction=ASC';
+
+  }
+
+  return $base;
 
 }
 
