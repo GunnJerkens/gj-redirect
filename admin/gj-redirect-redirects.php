@@ -2,18 +2,26 @@
 
 if(!empty($_POST)) {
 
-  $postData = $_POST;
-  $response = gjRedirectModifyTable($postData);
+  if($_POST['form_name'] === 'gj_redirects') {
+
+    $postData = $_POST;
+    $response = gjRedirectModifyTable($postData);
+
+  } elseif($_POST['form_name'] === 'gj_redirects_count') {
+
+    $redirects_count = (int) $_POST['gj_redirect_count_number'];
+    update_option('gj_redirect_count_number', $redirects_count);
+
+  }
 
 }
 
+$redirects_count = get_option('gj_redirect_count_number') != null ? get_option('gj_redirect_count_number') : 50;
 $query = array(
-  'items' => (isset($_GET['count']) ? (int) $_GET['count'] : 50),
+  'items' => (isset($_GET['count']) ? (int) $_GET['count'] : $redirects_count),
   'sort_column' => null,
   'sort_direction' => null
 );
-
-var_dump($query);
 
 $sort = gjRedirectSortTable($query);
 $pagination = gjRedirectPaginateTable($query['items']);
@@ -32,6 +40,19 @@ if($response['status'] === 'success') {
 
 } ?>
 
+<div class="gj-item count">
+  <form name="gj_redirects_count" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+    <input type="hidden" name="form_name" value="gj_redirects_count">
+    <select name="gj_redirect_count_number">
+      <option value="25" <?php echo $redirects_count === '25' ? 'selected' : ''; ?>>25</option>
+      <option value="50" <?php echo $redirects_count === '50' ? 'selected' : ''; ?>>50</option>
+      <option value="100" <?php echo $redirects_count === '100' ? 'selected' : ''; ?>>100</option>
+      <option value="250" <?php echo $redirects_count === '250' ? 'selected' : ''; ?>>250</option>
+      <option value="500" <?php echo $redirects_count === '500' ? 'selected' : ''; ?>>500</option>
+    </select>
+    <button class="btn button" type="submit">Apply</button>
+  </form>
+</div>
 
 <form name="gj_redirects" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
   <input type="hidden" name="form_name" value="gj_redirects">
@@ -90,10 +111,6 @@ if($response['status'] === 'success') {
   <div class="gj-buttons">
     <div class="btn button table-button add-row">Add Row</div>
     <button class="btn button table-button" type="submit">Update Settings</button>
-  </div>
-
-  <div class="gj-item count">
-    <form name="gj"></form>
   </div>
 
   <div class="tablenav bottom">
