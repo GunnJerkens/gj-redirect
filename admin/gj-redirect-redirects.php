@@ -16,8 +16,9 @@ $query = array(
 var_dump($query);
 
 $sort = gjRedirectSortTable($query);
-
 $pagination = gjRedirectPaginateTable($query['items']);
+$url = gjRedirectsBuildURL($query);
+
 $get_gjRedirectDB = new gjRedirectDB;
 $redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $pagination['sql_length']);
 
@@ -92,17 +93,37 @@ if($response['status'] === 'success') {
   </div>
 
   <div class="gj-item count">
-    
+    <form name="gj"></form>
   </div>
 
   <div class="tablenav bottom">
     <div class="tablenav-pages">
       <span class="displaying-num"><?php echo $pagination['total_items'].' items'; ?></span>
-      <span class="pagination-links"><a class="first-page <?php echo $pagination['current_page'] - 1 > 0 ? '' : 'disabled'; ?>" title="Go to the first page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=1">«</a>
-      <a class="prev-page <?php echo $pagination['current_page'] - 1 > 0 ? '' : 'disabled'; ?>" title="Go to the previous page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=<?php echo $pagination['current_page'] - 1 > 0 ? $pagination['current_page'] - 1 : $pagination['current_page']; ?>">‹</a>
-      <span class="paging-input"><?php echo $pagination['current_page']; ?> of <span class="total-pages"><?php echo $pagination['pages'] == 0 ? '1' : $pagination['pages']; ?></span></span>
-      <a class="next-page <?php echo $pagination['current_page'] + 1 > $pagination['pages'] ? 'disabled' : ''; ?>" title="Go to the next page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=<?php echo $pagination['current_page'] + 1 > $pagination['pages'] ? $pagination['current_page'] : $pagination['current_page'] + 1; ?>">›</a>
-      <a class="last-page <?php echo $pagination['current_page'] + 1 > $pagination['pages'] ? 'disabled' : ''; ?>" title="Go to the last page" href="?page=gj_redirect&tab=gj_redirect_redirects&paged=<?php echo $pagination['pages']; ?>">»</a></span>
+      <span class="pagination-links">
+        <a 
+          class="first-page <?php echo $pagination['current_page'] - 1 > 0 ? '' : 'disabled'; ?>" 
+          title="Go to the first page" href="<?php echo $url.'&paged=1'; ?>">«
+        </a>
+        <a 
+          class="prev-page <?php echo $pagination['current_page'] - 1 > 0 ? '' : 'disabled'; ?>" 
+          title="Go to the previous page" 
+          href="<?php echo $url.'&paged='.($pagination['current_page'] - 1 > 0 ? $pagination['current_page'] - 1 : $pagination['current_page']); ?>">‹
+        </a>
+        <span 
+          class="paging-input"><?php echo $pagination['current_page']; ?> of 
+          <span class="total-pages"><?php echo $pagination['pages'] == 0 ? '1' : $pagination['pages']; ?></span>
+        </span>
+        <a 
+          class="next-page <?php echo $pagination['current_page'] + 1 > $pagination['pages'] ? 'disabled' : ''; ?>" 
+          title="Go to the next page" 
+          href="<?php echo $url.'&paged='.($pagination['current_page'] + 1 > $pagination['pages'] ? $pagination['current_page'] : $pagination['current_page'] + 1); ?>">›
+        </a>
+        <a 
+          class="last-page <?php echo $pagination['current_page'] + 1 > $pagination['pages'] ? 'disabled' : ''; ?>" 
+          title="Go to the last page" 
+          href="<?php echo $url.'&paged='.$pagination['pages']; ?>">»
+        </a>
+      </span>
     </div>
   </div>
 

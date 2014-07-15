@@ -132,9 +132,21 @@ function gjRedirectPaginateTable($showItems) {
 
 }
 
-function gjRedirectSortTable($options) {
+function gjRedirectSortTable($query) {
 
 
+
+}
+
+function gjRedirectsBuildURL($query) {
+
+  $base = '?page=gj_redirect&tab=gj_redirect_redirects';
+
+  $base .= '&count='.$query['items'];
+  $base .= $query['sort_column'] != null ? '&sort_column='.$query['sort_column'] : '';
+  $base .= $query['sort_direction'] != null ? '&sort_direction='.$query['sort_direction'] : '';
+
+  return $base;
 
 }
 
