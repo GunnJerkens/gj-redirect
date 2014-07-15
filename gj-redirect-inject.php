@@ -32,11 +32,24 @@ class gjRedirectInject {
 
     if(is_404()) {
 
-      $url = $_SERVER['REQUEST_URI'];
-
       $get_gjRedirectDB = new gjRedirectDB;
-      $matchResponse = $get_gjRedirectDB->matchRedirects($url);
-      $matchResponse = isset($matchResponse[0]) ? $matchResponse[0] : null;
+      $url = $_SERVER['REQUEST_URI'];
+      $parsed = parse_url($url);
+      $matchResponse = null;
+
+      if(isset($parsed['query'])) {
+
+        $ignoreQueryResponse = $get_gjRedirectDB->matchRedirects($parsed['path'], 'ignorequery');
+        $matchResponse = isset($ignoreQueryResponse[0]) ? $ignoreQueryResponse[0] : null;
+
+      }
+
+      if($matchResponse == null) {
+
+        $exactMatchResponse = $get_gjRedirectDB->matchRedirects($url, 'exact');
+        $matchResponse = isset($exactMatchResponse[0]) ? $exactMatchResponse[0] : null;
+
+      }
 
       if($matchResponse != NULL && $matchResponse->status !== 'disabled' && $matchResponse->redirect !== "") {
 

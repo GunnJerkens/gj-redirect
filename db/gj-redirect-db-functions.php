@@ -50,21 +50,41 @@ class gjRedirectDB {
     );
 
     return $query;
+
   }
 
-  function matchRedirects($url, $type='OBJECT') {
+  function matchRedirects($url, $scope = null, $type='OBJECT') {
 
     $table_name = $this->table();
-    $where = "url = '$url'";
 
-    $query = $this->wpdb->get_results(
-      "
-      SELECT *
-      FROM $table_name
-      WHERE $where
-      ",
-      $type
-    );
+    if($scope != null) {
+
+      $where = 'url = "'.$url.'"';
+      $status = 'scope != "disabled"';
+
+      if($scope === 'ignorequery') {
+
+        $find = 'AND scope = "'.$scope.'"';
+
+      } elseif($scope === 'exact') {
+
+        $find = 'AND scope IN ("exact", "ignorequery")';
+
+      }
+
+
+      $query = $this->wpdb->get_results(
+        "
+        SELECT *
+        FROM $table_name
+        WHERE $where
+        AND $status
+        $find
+        ",
+        $type
+      );
+
+    }
 
     return $query;
 

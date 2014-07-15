@@ -51,7 +51,6 @@ if($response['status'] === 'success') {
       <option value="50" <?php echo $redirects_count == '50' ? 'selected' : ''; ?>>50</option>
       <option value="100" <?php echo $redirects_count == '100' ? 'selected' : ''; ?>>100</option>
       <option value="250" <?php echo $redirects_count == '250' ? 'selected' : ''; ?>>250</option>
-      <option value="500" <?php echo $redirects_count == '500' ? 'selected' : ''; ?>>500</option>
     </select>
     <button class="btn button" type="submit">Apply</button>
   </form>
@@ -99,10 +98,10 @@ if($response['status'] === 'success') {
           </select>
         </td>
         <td>
-          <select class="detect-change" name="<?php echo $redirect->id; ?>[scope]" disabled>
-            <option value="exact" <?php echo $redirect->scope === 'exact' ? 'selected' : ''; ?>>Exact</option>
-            <option value="plusquery" <?php echo $redirect->scope === 'plusquery' ? 'selected' : ''; ?>>Exact + Query</option>
-            <option value="any" <?php echo $redirect->scope === 'any' ? 'selected' : ''; ?>>Any</option>
+          <select class="detect-change" name="<?php echo $redirect->id; ?>[scope]">
+            <option value="exact" <?php echo $redirect->scope === 'exact' ? 'selected' : ''; ?>>Exact Match</option>
+            <option value="ignorequery" <?php echo $redirect->scope === 'ignorequery' ? 'selected' : ''; ?>>Ignore Query</option>
+            <!-- <option value="any" <?php // echo $redirect->scope === 'any' ? 'selected' : ''; ?>>Any Match</option> -->
           </select>
         </td>
       </tr><?php
