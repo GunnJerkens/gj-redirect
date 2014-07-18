@@ -30,7 +30,14 @@ $count_replace = '&count='.$query['items'];
 $count_url = str_replace($count_replace, '', $url);
 
 $get_gjRedirectDB = new gjRedirectDB;
-$redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $pagination['sql_length'], array('column' => $query['sort_column'], 'sorted' => $query['sort_direction']));
+$redirects = $get_gjRedirectDB->getRedirects(
+  $pagination['sql_offset'], 
+  $pagination['sql_length'], 
+  array(
+    'column' => $query['sort_column'], 
+    'sorted' => $query['sort_direction']
+  )
+);
 
 // This is our error handling
 if($response['status'] === 'success') {
