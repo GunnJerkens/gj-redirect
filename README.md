@@ -17,7 +17,7 @@ WordPress requires absolute paths for wp_redirect. This may have some bugs to wo
 
 ### redirect
 
-`redirect` = The URl to redirect to
+`redirect` = The URL to redirect to
 
 ### status
 
@@ -28,13 +28,13 @@ WordPress requires absolute paths for wp_redirect. This may have some bugs to wo
 
 Scope defines how we are matching the URL. Exact is the most similar to a standard:  
 
-`Redirect 301 /url-a/ /url-b/`.
+`Redirect 301 /url-a/ /url-b/`
 
-`exact` = Match url exactly.  
-`plusquery` = Match url exactly, match query exactly.  
-`any` = Match exactly, ignore query string.  
+`exact` = match url exactly  
+`ignorequery` = match url exactly, ignore any query string  
+`any` = match anywhere in url  
 
-*This is currently disabled. Only exact match is designed to work at the moment.*  
+* `any` is current disabled 
 
 ## csv upload
 
@@ -43,7 +43,7 @@ Example CSV document:
 url | redirect | status | scope
 --- | -------- | ------ | -----
 /apples/ | /bananas/ | 301 | exact
-/turtles/?ref=water | /beach/ | 302 | plusquery
+/turtles/?ref=water | /beach/ | 302 | ignorequery
 /turtles/?ref=water | /beach/ | 302 | any
 
 ## todo
