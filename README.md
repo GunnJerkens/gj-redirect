@@ -5,7 +5,7 @@ This plugin was built to alleviate doing heavy redirects with .htaccess. It allo
 
 ## paths
 
-This supports both absolute and relative paths in the table. It is suggested to use absolute paths. Currently the final output tests for the existance of http://, if it does not exist it appends the hostname. If it does then it suspects the url to be complete.
+This supports both absolute and relative paths in the table. It is suggested to use relative paths (/path/to/page/ instead of http://mysite.com/path/to/page). Currently the final output tests for the existance of http://, if it does not exist it appends the hostname. If it does then it suspects the url to be complete.
 
 WordPress requires absolute paths for wp_redirect. This may have some bugs to work out in the future.
 
@@ -45,6 +45,10 @@ url | redirect | status | scope
 /apples/ | /bananas/ | 301 | exact
 /turtles/?ref=water | /beach/ | 302 | ignorequery
 /turtles/?ref=water | /beach/ | 302 | any
+
+## 404 logging
+
+There is a function in settings to log 404s to the database. USE WITH CAUTION and check the results often. Make use of the `ignorequery` option as a default to stop from logging additional 404s for the same URL.
 
 ## todo
 
