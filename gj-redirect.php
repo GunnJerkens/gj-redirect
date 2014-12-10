@@ -3,7 +3,7 @@
 Plugin Name: GJ Redirect
 Plugin URI: http://gunnjerkens.com
 Description: Intercepts and redirects defined pages during WP routing instead of using htaccess or other method.
-Version: 0.3
+Version: 0.3.0
 Author: Gunn|Jerkens
 Author URI: http://gunnjerkens.com
 */
