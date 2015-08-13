@@ -13,7 +13,8 @@ require_once(plugin_dir_path(__FILE__).'gj-redirect-inject.php');
 require_once(plugin_dir_path(__FILE__).'inc/gj-redirect-admin-functions.php');
 require_once(plugin_dir_path(__FILE__).'inc/gj-redirect-db-functions.php');
 
-class gjRedirect {
+class gjRedirect
+{
 
   function __construct() {
     add_action('admin_menu', array(&$this,'gj_redirect_admin_actions'));
@@ -63,4 +64,7 @@ class gjRedirect {
   }
 
 }
+
 new gjRedirect();
+new gjRedirectDB();
+new gjRedirectInject();

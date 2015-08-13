@@ -1,193 +1,208 @@
 <?php
 
-class gjRedirectDB {
+class gjRedirectDB
+{
 
+  /**
+   * WordPress database connection object
+   *
+   * @var $wpdb object
+   */
   private $wpdb;
 
-  function __construct() {
+  /**
+   * Table where we store the data
+   *
+   * @var $table string
+   */
+  protected $table;
+
+  /**
+   * Array of ids to delete
+   *
+   * @var $deletes array
+   */
+  protected $deletes;
+
+  /**
+   * Class constructor
+   *
+   * @return void
+   */
+  function __construct()
+  {
     global $wpdb;
-    $this->wpdb = $wpdb;
+
+    $this->wpdb  = $wpdb;
+    $this->table = $wpdb->prefix.'gj_redirects';
   }
 
-  function table() {
-
-    $table = $this->wpdb->prefix.'gj_redirects';
-
-    return $table;
-
+  /**
+   * Returns a count of the number of redirects
+   *
+   * @return int
+   */
+  function countRows($type='OBJECT')
+  {
+    return $this->wpdb->get_results("SELECT COUNT(*) FROM $this->table");
   }
 
-  function countRows($type='OBJECT') {
-
-    $table_name = $this->table();
-
-    $count = $this->wpdb->get_results(
-      "
-      SELECT COUNT(*) 
-      FROM $table_name
-      "
+  /**
+   * Gets our redirects
+   *
+   * @param $offset
+   * @param $length
+   * @param $orderColumn string
+   * @param $orderDirection string
+   * @param $type string
+   *
+   * @return array
+   */
+  function getRedirects($offset, $length, $orderColumn = 'id', $orderDirection = 'ASC', $type='OBJECT')
+  {
+    $sql = $this->wpdb->prepare(
+      "SELECT * 
+        FROM $this->table 
+        WHERE 1 
+        ORDER BY %s %s 
+        LIMIT %d, %d",
+        $orderColumn, $orderDirection, $offset, $length
     );
-
-    return $count;
-
+    return $this->wpdb->get_results($sql, $type);
   }
 
-  function getRedirects($offset, $length, $orderby = array( 'column' => 'id', 'sorted' => 'DESC'), $where='1=1', $type='OBJECT') {
+  /**
+   * Matches redirects
+   *
+   * @return object||false
+   */
+  function matchRedirects($url, $scope = null, $type='OBJECT')
+  {
 
-    $table_name = $this->table();
-
-    $order = '`gj_gj_redirects`.`'.$orderby['column'].'` '.$orderby['sorted'];
-
-    $query = $this->wpdb->get_results(
-      "
-      SELECT *
-      FROM $table_name
-      WHERE $where
-      ORDER BY $order
-      LIMIT $offset, $length
-      ",
-      $type
-    );
-
-    return $query;
-
-  }
-
-  function matchRedirects($url, $scope = null, $type='OBJECT') {
-
-    $table_name = $this->table();
-
-    if($scope != null) {
-
-      $where = 'url = "'.$url.'"';
-      $status = 'scope != "disabled"';
-
-      if($scope === 'ignorequery') {
-
-        $find = 'AND scope = "'.$scope.'"';
-
-      } elseif($scope === 'exact') {
-
-        $find = 'AND scope IN ("exact", "ignorequery")';
-
-      }
-
-
-      $query = $this->wpdb->get_results(
-        "
-        SELECT *
-        FROM $table_name
-        WHERE $where
-        AND $status
-        $find
+    if($scope === "ignorequery") {
+      $sql = $this->wpdb->prepare(
+        "SELECT *
+          FROM $this->table
+          WHERE `url` LIKE %s
+          AND `scope` = %s
         ",
-        $type
+        "%$url%", $scope
       );
-
+    } else if($scope === "exact") {
+      $sql = $this->wpdb->prepare(
+        "SELECT *
+          FROM $this->table
+          WHERE `url` = %s
+          AND `scope` = %s
+        ",
+        "$url", $scope
+      );
+    } else {
+      return false;
     }
 
-    return $query;
-
+    return $this->wpdb->get_results($sql, $type);
   }
 
-  private $deletes;
-
-  function setDeletes($id) {
-
+  /**
+   * Sets the protecte var deletes
+   *
+   * @return void
+   */
+  function setDeletes($id)
+  {
     $this->deletes = $id;
-
   }
 
-  function deleteRedirects() {
-
-    $table_name = $this->table();
-
+  /**
+   * Deletes redirects
+   *
+   * @return bool
+   */
+  function deleteRedirects()
+  {
     if($this->deletes) {
-
       foreach($this->deletes as $id) {
 
-        $result = $this->wpdb->query(
-          $this->wpdb->prepare(
-            "
-            DELETE FROM $table_name 
-            WHERE id = %d
-            ",
-            $id
-          )
+        $sql = $this->wpdb->prepare(
+          "DELETE FROM $this->table
+            WHERE id = %d",
+          $id
         );
-
+        $result = $this->wpdb->query($sql);
       }
-
-    } else {
-
-      $result = 'You must set deletes prior to calling this function.';
-
     }
 
     $this->deletes = false;
 
-    $result > 0 ? $result = true : $result = false;
-
-    return $result;
-
+    return $result > 0 ? true :false;
   }
 
-  function deleteAllRedirects() {
-
-    $table_name = $this->table();
-
-    $result = $this->wpdb->query(
-      "TRUNCATE TABLE $table_name"
-      );
-
-    return $result;
-
+  /**
+   * Delete all redirects, truncate the table
+   *
+   * @return void
+   */
+  function deleteAllRedirects()
+  {
+    $result = $this->wpdb->query("TRUNCATE TABLE $this->table");
   }
 
-  function createRedirects($createItems) {
+  /**
+   * Create redirect(s)
+   *
+   * @param $createItems array
+   *
+   * @return array
+   */
+  function createRedirects($createItems)
+  {
+    $result = array();
 
-    $table_name = $this->table();
-
-    foreach($createItems as $key=>$value) {
-
-      $result[] = $this->wpdb->insert(
-        $table_name,
-        array(
-          'url' => $value['url'],
-          'redirect' => $value['redirect'],
-          'status' => $value['status'],
-          'scope' => $value['scope']
-        ) 
-      );
-
+    if(is_array($createItems)) {
+      foreach($createItems as $key=>$value) {
+        $result[] = $this->wpdb->insert(
+          $this->table,
+          array(
+            'url'      => $value['url'],
+            'redirect' => $value['redirect'],
+            'status'   => $value['status'],
+            'scope'    => $value['scope']
+          ) 
+        );
+      }
     }
 
     return $result;
-
   }
 
-  function updateRedirects($updateItems) {
+  /**
+   * Update redirect(s)
+   *
+   * @param $updateItems array
+   *
+   * @return array
+   */
+  function updateRedirects($updateItems)
+  {
+    $result = array();
 
-    $table_name = $this->table();
-
-    foreach($updateItems as $key=>$value) {
-
-      $result[] = $this->wpdb->update(
-        $table_name,
-        array(
-          'url' => $value['url'],
-          'redirect' => $value['redirect'],
-          'status' => $value['status'],
-          'scope' => $value['scope']
-        ),
-        array('id' => $value['id'])
-      );
-
+    if(is_array($updateItems)) {
+      foreach($updateItems as $key=>$value) {
+        $result[] = $this->wpdb->update(
+          $this->table,
+          array(
+            'url'      => $value['url'],
+            'redirect' => $value['redirect'],
+            'status'   => $value['status'],
+            'scope'    => $value['scope']
+          ),
+          array('id' => $value['id'])
+        );
+      }
     }
 
     return $result;
-
   }
-
 
 }
