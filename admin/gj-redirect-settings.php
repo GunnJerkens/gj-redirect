@@ -116,6 +116,7 @@ if(isset($response['status'])) {
   </tr>
   <tr>
     <form name="gj_redirects_upload" method="post" enctype="multipart/form-data" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+      <?php echo wp_nonce_field('gj-redirect'); ?>
       <td><input type="file" name="gj_redirects_csv" class="btn" value="<?php echo isset($upload) ? $upload : ''; ?>" size="20"></td>
       <td><button class="btn button" type="submit">Upload CSV</button></td>
     </form>
@@ -125,6 +126,7 @@ if(isset($response['status'])) {
   </tr>
   <tr>
     <form name="gj_redirects_metabox" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+      <?php echo wp_nonce_field('gj-redirect'); ?>
       <td>
         <select name="gj_redirect_metabox_status">
           <option value="enabled" <?php echo $metabox_status === 'disabled' ? 'selected' : ''; ?>>Enabled</option>
@@ -139,6 +141,7 @@ if(isset($response['status'])) {
   </tr>
   <tr>
     <form name="gj_redirects_delete" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+      <?php echo wp_nonce_field('gj-redirect'); ?>
       <td>
         <select name="delete_redirects">
           <option value="false" selected>Do Not Delete</option>

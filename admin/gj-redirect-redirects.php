@@ -43,7 +43,7 @@ if(isset($response['status'])) {
 
 <div class="gj-item count">
   <form name="gj_redirects_count" method="post" action="<?php echo $count_url; ?>">
-    <?php wp_nonce_field('gj-redirect'); ?>
+    <?php echo wp_nonce_field('gj-redirect'); ?>
     <input type="hidden" name="form_name" value="gj_redirects_count">
     <select name="gj_redirect_count_number">
       <option value="25" <?php echo $redirects_count == '25' ? 'selected' : ''; ?>>25</option>
@@ -56,6 +56,7 @@ if(isset($response['status'])) {
 </div>
 
 <form name="gj_redirects" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+  <?php echo wp_nonce_field('gj-redirect'); ?>
   <input type="hidden" name="form_name" value="gj_redirects">
   <table class="wp-list-table widefat fixed gj-redirects">
     <thead class="">
