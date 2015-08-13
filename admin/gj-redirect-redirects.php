@@ -1,19 +1,15 @@
 <?php
 
+$response = array();
+
 if(!empty($_POST)) {
-
   if($_POST['form_name'] === 'gj_redirects') {
-
     $postData = $_POST;
     $response = gjRedirectModifyTable($postData);
-
   } elseif($_POST['form_name'] === 'gj_redirects_count') {
-
     $redirects_count = (int) $_POST['gj_redirect_count_number'];
     update_option('gj_redirect_count_number', $redirects_count);
-
   }
-
 }
 
 $redirects_count = get_option('gj_redirect_count_number') != null ? get_option('gj_redirect_count_number') : 50;
@@ -33,11 +29,11 @@ $get_gjRedirectDB = new gjRedirectDB;
 $redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $pagination['sql_length'], $query['sort_column'], $query['sort_direction']);
 
 // This is our error handling
-if($response['status'] === 'success') {
+if(isset($response['status'] && $response['status'] === 'success') {
 
   echo '<div id="message" class="updated"><p>'.$response['message'].'</p></div>';
 
-} else if ($response['status'] === 'error') {
+} else if (isset($response['status'] && $response['status'] === 'error') {
 
   echo '<div id="message" class="error"><p>'.$response['message'].'</p></div>';
 
