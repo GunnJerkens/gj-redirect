@@ -61,7 +61,7 @@ if(isset($_POST['delete_redirects'])) {
 }
 
 if(isset($response['status'])) {
-  if(isset($response['status'] === 'success') {
+  if($response['status'] === 'success') {
     echo '<div id="message" class="updated"><p>'.$response['message'].'</p></div>';
   } else if ($response['status'] === 'error') {
     echo '<div id="message" class="error"><p>'.$response['message'].'</p></div>';
@@ -116,7 +116,7 @@ if(isset($response['status'])) {
   </tr>
   <tr>
     <form name="gj_redirects_upload" method="post" enctype="multipart/form-data" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-      <td><input type="file" name="gj_redirects_csv" class="btn" value="<?php echo $upload; ?>" size="20"></td>
+      <td><input type="file" name="gj_redirects_csv" class="btn" value="<?php echo isset($upload) ? $upload : ''; ?>" size="20"></td>
       <td><button class="btn button" type="submit">Upload CSV</button></td>
     </form>
   </tr>

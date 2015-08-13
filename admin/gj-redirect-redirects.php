@@ -36,7 +36,7 @@ $redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $paginat
 if(isset($response['status'])) {
   if($response['status'] === 'success') {
     echo '<div id="message" class="updated"><p>'.$response['message'].'</p></div>';
-  } else if (isset($response['status'] && $response['status'] === 'error') {
+  } else if ($response['status'] === 'error') {
     echo '<div id="message" class="error"><p>'.$response['message'].'</p></div>';
   }
 } ?>
