@@ -1,5 +1,9 @@
 <?php
 
+if((!empty($_POST) || !empty($_FILES)) && (1 !== check_admin_referer('gj-redirect'))) {
+  die('Permission denied');
+}
+
 $response = array();
 
 if(!empty($_POST)) {
@@ -29,18 +33,17 @@ $get_gjRedirectDB = new gjRedirectDB;
 $redirects = $get_gjRedirectDB->getRedirects($pagination['sql_offset'], $pagination['sql_length'], $query['sort_column'], $query['sort_direction']);
 
 // This is our error handling
-if(isset($response['status'] && $response['status'] === 'success') {
-
-  echo '<div id="message" class="updated"><p>'.$response['message'].'</p></div>';
-
-} else if (isset($response['status'] && $response['status'] === 'error') {
-
-  echo '<div id="message" class="error"><p>'.$response['message'].'</p></div>';
-
+if(isset($response['status'])) {
+  if($response['status'] === 'success') {
+    echo '<div id="message" class="updated"><p>'.$response['message'].'</p></div>';
+  } else if (isset($response['status'] && $response['status'] === 'error') {
+    echo '<div id="message" class="error"><p>'.$response['message'].'</p></div>';
+  }
 } ?>
 
 <div class="gj-item count">
   <form name="gj_redirects_count" method="post" action="<?php echo $count_url; ?>">
+    <?php wp_nonce_field('gj-redirect'); ?>
     <input type="hidden" name="form_name" value="gj_redirects_count">
     <select name="gj_redirect_count_number">
       <option value="25" <?php echo $redirects_count == '25' ? 'selected' : ''; ?>>25</option>

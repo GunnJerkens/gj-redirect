@@ -1,17 +1,19 @@
 <?php
 
+if((!empty($_POST) || !empty($_FILES)) && (1 !== check_admin_referer('gj-redirect'))) {
+  die('Permission denied');
+}
+
 ini_set('auto_detect_line_endings',TRUE);
 
+$response = array();
+
 if(isset($_FILES['gj_redirects_csv'])) {
-
   $uploadedFile = $_FILES['gj_redirects_csv'];
-
   $response = gjRedirectBulkUpload($uploadedFile);
-
 }
 
 if(isset($_POST['gj_redirects_capture'])) {
-
   $capture_urls = $_POST['gj_redirect_capture_urls'];
   update_option('gj_redirect_capture_urls', $capture_urls);
 
@@ -25,27 +27,22 @@ if(isset($_POST['gj_redirects_capture'])) {
 
 } else {
 
-  $capture_urls = get_option('gj_redirect_capture_urls');
-  $capture_status = get_option('gj_redirect_capture_status');
+  $capture_urls     = get_option('gj_redirect_capture_urls');
+  $capture_status   = get_option('gj_redirect_capture_status');
   $capture_redirect = get_option('gj_redirect_capture_redirect');
 
 }
 
 if(isset($_POST['gj_redirect_metabox_status'])) {
-
   $metabox_status = $_POST['gj_redirect_metabox_status'];
   update_option('gj_redirect_metabox_status', $metabox_status); 
 
   $response = gjRedirectMessaging('success', 'Options saved.');
-
 } else {
-
   $metabox_status = get_option('gj_redirect_metabox_status');
-
 }
 
 if(isset($_POST['delete_redirects'])) {
-
   if($_POST['delete_redirects'] === 'true') {
 
     // Delete All Redirects
@@ -53,31 +50,22 @@ if(isset($_POST['delete_redirects'])) {
     $deleteSuccess = $get_gjRedirectDB->deleteAllRedirects();
 
     if($deleteSuccess) {
-
       $response = gjRedirectMessaging('success', 'All redirects have been deleted.');
-
     } else {
-
       $response = gjRedirectMessaging('error', 'Redirects failed to delete.');
-
     }
 
   } else {
-
     $response = gjRedirectMessaging('error', 'You must select "Yes I\'m Sure" to continue with deletion.');
-
   }
-
 }
 
-if($response['status'] === 'success') {
-
-  echo '<div id="message" class="updated"><p>'.$response['message'].'</p></div>';
-
-} else if ($response['status'] === 'error') {
-
-  echo '<div id="message" class="error"><p>'.$response['message'].'</p></div>';
-
+if(isset($response['status'])) {
+  if(isset($response['status'] === 'success') {
+    echo '<div id="message" class="updated"><p>'.$response['message'].'</p></div>';
+  } else if ($response['status'] === 'error') {
+    echo '<div id="message" class="error"><p>'.$response['message'].'</p></div>';
+  }
 } ?>
 
 <table class="gj-redirects-settings">
@@ -85,6 +73,7 @@ if($response['status'] === 'success') {
     <td><h3>Capture 404s</h3></td>
   </tr>
   <form name="gj_redirects_capture" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+    <?php wp_nonce_field('gj-redirect'); ?>
     <input type="hidden" name="gj_redirects_capture" value=true>
     <tr>
       <td>
