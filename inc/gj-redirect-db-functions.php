@@ -145,7 +145,7 @@ class gjRedirectDB
    */
   function deleteAllRedirects()
   {
-    $result = $this->wpdb->query("TRUNCATE TABLE $this->table");
+    return $this->wpdb->query("TRUNCATE TABLE $this->table");
   }
 
   /**
