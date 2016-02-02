@@ -122,21 +122,6 @@ if(isset($response['status'])) {
     </form>
   </tr>
   <tr>
-    <td><h3>Metabox</h3></td>
-  </tr>
-  <tr>
-    <form name="gj_redirects_metabox" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-      <?php echo wp_nonce_field('gj-redirect'); ?>
-      <td>
-        <select name="gj_redirect_metabox_status">
-          <option value="enabled" <?php echo $metabox_status === 'disabled' ? 'selected' : ''; ?>>Enabled</option>
-          <option value="disabled" <?php echo $metabox_status === 'disabled' ? 'selected' : ''; ?>>Disabled</option>
-        </select>
-      </td>
-      <td><button class="btn button" type="submit">Update Settings</button></td>
-    </form>
-  </tr>
-  <tr>
     <td><h3>Delete All Redirects</h3></td>
   </tr>
   <tr>
