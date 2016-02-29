@@ -201,6 +201,8 @@ function gjRedirectsBuildURL($query) {
 function gjRedirectBulkUpload($uploadedFile) {
 
   $get_gjRedirectDB = new gjRedirectDB;
+  $capture_status   = get_option('gj_redirect_capture_status');
+  $capture_redirect = get_option('gj_redirect_capture_redirect');
 
   if ($uploadedFile['name'] === '') {
 
@@ -232,6 +234,8 @@ function gjRedirectBulkUpload($uploadedFile) {
     foreach ($createArray as $key=>$value) {
 
       if (count($labels) == count($value)) {
+        $value[1] = $value[1] === '' ? $capture_redirect : $value[1];
+        $value[2] = $value[2] === '' ? $capture_status : $value[2];
         $createArray[$key] = array_combine($labels, $value);
       }
     }
