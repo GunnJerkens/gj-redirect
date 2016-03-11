@@ -27,7 +27,7 @@ class gjRedirect
   }
 
   function gj_redirect_admin_options() {
-    include('admin/gj-redirect-options.php');
+    include('admin/options.php');
   }
 
   function gj_redirect_admin_scripts() {
