@@ -35,7 +35,7 @@ class gjRedirectInject
    *
    * @return bool
    */
-  function setCapture()
+  private function setCapture()
   {
     return (get_option('gj_redirect_capture_urls') === 'enabled') ? true : false;
   }
@@ -45,41 +45,45 @@ class gjRedirectInject
    *
    * @return void
    */
-  function templateInject()
+  public function templateInject()
   {
+    if(is_admin() || !is_404()) {
+      return;
+    }
 
-    if(is_404()) {
-      $url              = $_SERVER['REQUEST_URI'];
-      $parsed           = parse_url($url);
-      $matchResponse    = null;
+    $request   = $_SERVER['REQUEST_URI'];
+    $parsed    = parse_url($request);
+    $redirects = $this->database->matchRedirects($request, $parsed['path']);
 
-      if(isset($parsed['query'])) {
-        $ignoreQueryResponse = $this->database->matchRedirects($parsed['path'], 'ignorequery');
-        $matchResponse = isset($ignoreQueryResponse[0]) ? $ignoreQueryResponse[0] : null;
-      }
+    if(is_array($redirects) && sizeof($redirects) > 0) {
+      foreach($redirects as $redirectObj) {
+        if(isset($redirectObj->status) && $redirectObj->status !== 'disabled') {
+          $url = $this->buildRedirect($redirectObj);
 
-      if($matchResponse == null) {
-        $exactMatchResponse = $this->database->matchRedirects($url, 'exact');
-        $matchResponse = isset($exactMatchResponse[0]) ? $exactMatchResponse[0] : null;
-      }
-
-      if($matchResponse != NULL && $matchResponse->status !== 'disabled' && $matchResponse->redirect !== "") {
-        $httpVerify = stripos($matchResponse->redirect, 'http://');
-
-        if($httpVerify !== false) {
-          $redirect = $matchResponse->redirect;
-        } else {
-          $redirect = 'http://'.$_SERVER['HTTP_HOST'].$matchResponse->redirect;
+          wp_redirect($url, $redirectObj->status);
+          exit;
         }
-
-        wp_redirect( $redirect, $matchResponse->status );
-        exit;
-
-      } elseif($matchResponse == NULL && $this->capture) {
-          $redirects[] = $this->logRedirect($url);
-          $this->database->createRedirects($redirects);
       }
     }
+
+    $redirects[] = $this->logRedirect($request);
+    $this->database->createRedirects($redirects);
+  }
+
+  /**
+   * Builds the url for the redirect
+   *
+   * @param $redirectObj object
+   *
+   * @return string
+   */
+  private function buildRedirect($redirectObj)
+  {
+    if(stripos($redirectObj->redirect, 'http://') || stripos($redirectObj->redirect, 'https://')) {
+      return $redirectObj->redirect;
+    }
+
+    return (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $redirectObj->redirect;
   }
 
   /**
@@ -89,7 +93,7 @@ class gjRedirectInject
    *
    * @return array
    */
-  function logRedirect($url)
+  private function logRedirect($url)
   {
     $capture_redirect = get_option('gj_redirect_capture_redirect');
     $capture_status   = get_option('gj_redirect_capture_status');

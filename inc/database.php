@@ -42,7 +42,7 @@ class gjRedirectDB
    *
    * @return int
    */
-  function countRows($type='OBJECT')
+  public function countRows($type='OBJECT')
   {
     return $this->wpdb->get_results("SELECT COUNT(*) FROM $this->table");
   }
@@ -58,7 +58,7 @@ class gjRedirectDB
    *
    * @return array
    */
-  function getRedirects($offset, $length, $orderColumn = 'id', $orderDirection = 'ASC', $type='OBJECT')
+  public function getRedirects($offset, $length, $orderColumn = 'id', $orderDirection = 'ASC', $type='OBJECT')
   {
     $sql = $this->wpdb->prepare(
       "SELECT * 
@@ -74,42 +74,33 @@ class gjRedirectDB
   /**
    * Matches redirects
    *
-   * @return object||false
+   * @param $url string
+   * @param $path string
+   * @param $type string
+   *
+   * @return array
    */
-  function matchRedirects($url, $scope = null, $type='OBJECT')
+  public function matchRedirects($url, $path, $type='OBJECT')
   {
-
-    if($scope === "ignorequery") {
-      $sql = $this->wpdb->prepare(
-        "SELECT *
-          FROM $this->table
-          WHERE `url` LIKE %s
-          AND `scope` = %s
-        ",
-        "%$url%", $scope
-      );
-    } else if($scope === "exact") {
-      $sql = $this->wpdb->prepare(
-        "SELECT *
-          FROM $this->table
-          WHERE `url` = %s
-          AND `scope` = %s
-        ",
-        "$url", $scope
-      );
-    } else {
-      return false;
-    }
+    $sql = $this->wpdb->prepare(
+      "SELECT * 
+        FROM $this->table
+        WHERE (`url` = %s AND `scope`='exact') 
+        OR (`url` = %s AND `scope`='ignorequery')",
+        "$url", "$path"
+    );
 
     return $this->wpdb->get_results($sql, $type);
   }
 
   /**
-   * Sets the protecte var deletes
+   * Sets the protected var deletes
+   *
+   * @param $id int
    *
    * @return void
    */
-  function setDeletes($id)
+  public function setDeletes($id)
   {
     $this->deletes = $id;
   }
@@ -119,7 +110,7 @@ class gjRedirectDB
    *
    * @return bool
    */
-  function deleteRedirects()
+  public function deleteRedirects()
   {
     if($this->deletes) {
       foreach($this->deletes as $id) {
@@ -143,7 +134,7 @@ class gjRedirectDB
    *
    * @return void
    */
-  function deleteAllRedirects()
+  public function deleteAllRedirects()
   {
     return $this->wpdb->query("TRUNCATE TABLE $this->table");
   }
@@ -155,7 +146,7 @@ class gjRedirectDB
    *
    * @return array
    */
-  function createRedirects($createItems)
+  public function createRedirects($createItems)
   {
     $result = array();
 
@@ -183,7 +174,7 @@ class gjRedirectDB
    *
    * @return array
    */
-  function updateRedirects($updateItems)
+  public function updateRedirects($updateItems)
   {
     $result = array();
 
