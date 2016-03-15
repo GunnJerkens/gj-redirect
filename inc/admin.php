@@ -167,7 +167,7 @@ function gjRedirectSortTable($query) {
 
 function gjRedirectSortURL($query, $column) {
 
-  $base = '?page=gj_redirect&tab=gj_redirect_redirects';
+  $base = '?page=gj_redirect&tab=redirects';
 
   $base .= '&count='.$query['items'];
   $base .= '&sort_column='.$column;
@@ -188,7 +188,7 @@ function gjRedirectSortURL($query, $column) {
 
 function gjRedirectsBuildURL($query) {
 
-  $base = '?page=gj_redirect&tab=gj_redirect_redirects';
+  $base = '?page=gj_redirect&tab=redirects';
 
   $base .= '&count='.$query['items'];
   $base .= $query['sort_column'] != null ? '&sort_column='.$query['sort_column'] : '';

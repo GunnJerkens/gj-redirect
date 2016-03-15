@@ -7,7 +7,7 @@ if ('gj-redirect-options.php' == basename($_SERVER['SCRIPT_FILENAME'])) {
   die();
 }
 
-$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'gj_redirect_redirects';
+$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'redirects';
 
 ?>
 
