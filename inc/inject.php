@@ -66,8 +66,10 @@ class gjRedirectInject
       }
     }
 
-    $redirects[] = $this->logRedirect($request);
-    $this->database->createRedirects($redirects);
+    if($this->capture) {
+      $redirects[] = $this->logRedirect($request);
+      $this->database->createRedirects($redirects);
+    }
   }
 
   /**
